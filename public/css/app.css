@@ -1,0 +1,531 @@
+/* CSS header*/
+html {
+    font-size: 17px;
+}
+
+body{
+    background-image: url(/img/backgr.jpg);
+    background-size: cover;
+    background-attachment:fixed
+}
+
+.loader {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    transition: .7s;
+    z-index: -999;
+    opacity: 0;
+}
+
+.loading-page {
+    z-index: 99999;
+    opacity: 1;
+}
+
+.loading-page__title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: rgb(255, 68, 0);
+}
+
+.main__manage_member {
+    min-height: 150vh;
+    padding-bottom: 10%;
+}
+
+#table, #mobile{
+    display: none;
+}
+
+.main__add_video {
+    width: 60%;
+    margin: auto;
+    margin-top: 5vh;
+    padding: 10vh;
+    background-color: #fff;
+}
+
+.video__table_mobile {
+    border: 2px solid #000;
+    padding: 5%;
+}
+
+.profile__ {
+    padding: 5%;
+}
+
+.thong-bao{
+    color: rgb(255, 196, 1);
+    margin-bottom: 10px;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+}
+
+.dot-onti {
+    right: -10px;
+    top: -5px;
+    position: absolute;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    background-color: rgb(248, 47, 47);
+}
+
+.new-num {
+    font-size: 11px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -53%);
+}
+/* sidemenu */
+
+.side__menu a {
+    padding: 10px;
+}
+
+.side__menu ul {
+    width: 440px; 
+    margin-top: 30px;
+    padding: 10px;
+    border-radius: 0 4rem 0 0;
+    background-color: #fff;
+}
+
+.side__menu a {
+    text-decoration: none;
+    border-radius: 0 2rem;
+    display: inline-block;
+}
+
+.side__menu span {
+    display: none;
+}
+
+li{
+    list-style: none;
+    display: inline-block;
+}
+
+/*Footer*/
+.email-footer{
+    float: right;
+}
+
+.btn-sign-footer{
+    border-radius: 3rem;
+}
+
+/*HOME CSS*/
+.btn_home {
+    display: inline-block;
+}
+
+.btn-course-home{
+    color: #fff;
+    background-color: #f05123;
+    border-radius: 3rem;
+    min-width: 120px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 5%;
+}
+
+.btn_home + .btn_home{
+    margin-left: 20px;
+}
+
+.btn__course__go {
+    min-width: 220px;
+}
+
+.btn-course-home:hover{
+    color: #fff;
+    background-color:  #da471f;
+}
+
+.background-home{
+    color: #fff;
+    min-height: 100vh;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 10%;
+}
+
+.text__home_1 {
+    font-size: 20px;
+}
+
+.text__home_2 {
+    font-size: 45px;
+}
+
+.img__home {
+    margin-top: 10%;
+    margin-bottom: 5%; 
+    display: flex;
+    justify-content: space-around;
+    width: 100%; 
+}
+
+.img__home_items {
+   text-align: center;
+}
+
+/* Sign up*/
+.main__signup {
+    min-height: 100vh;
+    padding-top: 5%;
+    padding-bottom: 10px;
+}
+
+.sign-up{
+    color: #fff;
+    margin-bottom: 10%;
+}
+
+.sign-up h2{
+    text-align: center;
+}
+
+.msg__check_signup {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top:0;
+    background-color: #0000003d;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.msg__check_signup_table {
+    width: 400px;
+    min-height: 150px;
+    background-color: #fff;
+    box-shadow: 0 0 8px #000000;
+    border-radius: .6rem;
+    color: #f32828;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sign in*/
+
+.main__login {
+    min-height: 100vh;
+    padding-top: 5%;
+}
+
+.login {
+    margin-top: 20px;
+}
+
+.login a{
+    float: right;
+}
+
+.check__captcha {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input__check {
+    width: 120px;
+}
+
+.random__check {
+    display: flex;
+    align-items: flex-end;
+}
+
+.captcha{
+    font-size: 30px;
+    cursor: default;
+    width: 120px;
+    text-align: center;
+    color: black;
+    background-image: url('https://i.pinimg.com/originals/b4/31/48/b43148675959cdb19d1964abe2d50254.png');
+}
+
+.captcha>b::selection {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.msg {
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    background-color: rgb(41, 40, 40,0.6);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 99999;
+}
+
+.table-msg {
+    margin-top: 25%;
+    border: 2px solid black;
+    border-radius: 1rem;
+}
+
+.pass {
+    position: relative;
+}
+
+.showpass {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #000000;
+}
+
+/* Show*/
+.show-info{
+    background-color: #fff;
+    border-radius: 1rem;
+}
+
+.show-info li{
+    color: #da471f;
+}
+
+/* css insert */
+.load {
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    background-color: rgb(36, 34, 34, 0.6);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.preload-icon {
+    text-align: center;
+    font-size: 66px;
+    color: #fff;
+}
+
+/* Member */
+.main__manage_member {
+    height: 90vh;
+    padding-top: 5vh;
+}
+
+.main_table__member {
+    width: 80%;
+    background-color: #fff;
+    padding: 20px;
+    margin: auto;
+}
+
+.search input{
+    border-radius: 1rem 0 0 1rem  ;
+    border: 2px solid #32383e;
+    padding: 5px;
+    width: 300px;
+    outline: none;
+}
+
+.mobile__show_member__ {
+    display: none;
+}
+
+.body__table__member > table {
+    width: 100%;
+    margin: 10px;
+}
+
+.body__table__member thead th {
+    background-color:  #32383e;
+    border-bottom: 2px solid rgb(39, 39, 39);
+    padding: 10px;
+    color: #fff;
+}
+
+.body__table__member tbody td {
+    background-color:  #32383e;
+    padding: 10px;
+    color: #fff;
+    border-bottom: 2px solid rgb(211, 209, 209);
+}
+
+.body__table__member tbody th {
+    background-color:  #32383e;
+    padding: 10px;
+    color: #fff;
+    border-bottom: 2px solid rgb(255, 253, 253);
+}
+
+.search button{
+    background-color: #32383e;
+    border: 2px solid #32383e;
+    border-radius:  0 1rem 1rem 0  ;
+    margin-left: -5px;
+    width: 70px;
+    padding: 5px;
+    outline: none;
+}
+
+.search button:hover{
+    background-color: #252a2e;
+    cursor: pointer;
+}
+
+
+/* feedback */
+.main___feedback {
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+
+.formfeedback {
+    box-shadow: 0 0 4px #000;
+    background-color: #fff;
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+}
+
+/* thongbao */
+.mobile__thongbao__ {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.thongbao-new {
+    width: 600px;
+    height: 600px;
+    background-color:rgba(255, 255, 255, 0.6);
+    margin: auto;
+    padding: 30px 20px;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.tinnhan {
+    width: 80%;
+    margin: auto;
+    position: relative;
+}
+
+.del-tinnhan {
+    position: absolute;
+    left: -12px;
+    transition: .2s;
+}
+
+.del-tinnhan > a {
+    text-decoration: none;
+    background-color: rgb(187, 59, 59);
+    padding: 10px 15px;
+    line-height: 46px;
+    display: inline-block;
+}
+
+.del-tinnhan:hover {
+    cursor: pointer;
+    left: -45px;
+    color: #fff;
+}
+
+.tinnhan + .tinnhan {
+    margin-top: 20px;
+}
+
+.tinnhan > a {
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+    min-width: 100%;
+    padding: 10px;
+    line-height: 46px;
+    display: inline-block;
+    position: relative;
+    z-index: 100;
+}
+
+.read {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    z-index: 110;
+    color: #ffffff; 
+    cursor: pointer;   
+}
+
+.timeshow {
+    cursor: pointer;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 110;
+    color: rgb(148, 145, 145);
+}
+
+.table-letters {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+}
+
+.show-letter {
+    margin: auto;
+    width: 520px;
+    height: 620px;
+    background-color: #fff;
+    padding: 30px;
+    position: relative;
+}
+
+.letter {
+    word-break: break-all;
+    position: relative;
+    padding: 30px 20px 15px;
+    border: 2px solid #ccc;
+}
+
+.letter + .letter {
+    margin-top: 20px;
+}
+
+.show__letter {
+    width: 80%; 
+}
+
+.close-letter {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+}
+
+.icon-letter {
+    position: absolute;
+    top: 0;
+    left: 5px;
+}

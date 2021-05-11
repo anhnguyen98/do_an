@@ -1,0 +1,47 @@
+<div class="main__admin_action">
+<div class="container bg-light pt-4 mt-3">
+    <div class="col-sm-8 m-auto">
+        <h2 class="text-danger">Thêm khóa học</h2>
+        <form class="mt-4" action="insert" method="POST" id="insert-course-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nameCourse"><h5>Tên khóa học</h5></label>
+                <input type="text" id="nameCourse" class="form-control" name="nameCourse">
+            </div>
+            <div class="form-group">
+                <label for="classify"><h5>Phân loại</h5></label>
+                <select class="form-control" name="classify">
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description"><h5>Mô tả</h5></label>
+                <textarea class="form-control" id="description" style="height: 150px;resize:none" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="img"><h5>Ảnh khóa học</h5></label>
+                <input type="file" id="img" class="form-control" name="img">
+            </div>
+            <div class="form-group text-right">
+                <a class="btn btn-secondary mb-4 text-light" href="/admin" style="float: left;">Về trang quản lí</a>
+                <button class="btn btn-success mb-4" id="btn-insert-course">Thêm khóa học</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+ {{!-- ready insert --}}
+    <div class="load" id="load">
+        <div class="preload-icon">
+            <i class=" ml-5 fa fa-spinner fa-spin text-light" style="font-size: 60px;"></i>
+            <h4 class="mr-5"> đăng khóa học</h4>
+        </div>
+    </div>
+<script>
+    var btnInsertCourse = document.getElementById('btn-insert-course');
+    var insertForm = document.forms['insert-course-form'];
+        btnInsertCourse.onclick = function(){   
+            document.getElementById('load').style.display = "block";
+            insertForm.submit();
+        }  
+</script>

@@ -1,0 +1,222 @@
+<div class="ui threaded comments tab-course__comment">
+    {{#each course.commentId as |commentItem|}}
+        {{{displayComment commentItem @root.course.commentId @index @root.user @root.course._id}}}
+    {{/each}}
+
+
+    <form class="ui add form ">
+        <div class="field">
+            <textarea id="content-add-comment"></textarea>
+        </div>
+        <button class="ui blue labeled submit icon button" type="button" id="add-comment">
+            <i class="icon edit"></i> Thêm bình luận
+        </button>
+    </form>
+
+    <div class="__check_menu" >
+        <div class="___log_out" id="modal-none-comment">
+            <div class="table__log_out">
+                <h5 class="text-center" id="modal-commment-text"></h5>
+                <div class="btn__log__out">
+                    <div class="__yes_logout" id="btn-success-display-none-comment">
+                    <a class="btn btn-info">Đồng ý</a>
+                    </div >
+                    <div class="___no_logout">
+                    <span id="back__logout" class="btn btn-secondary displayComment">Trở về</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+</div>
+
+<script>
+
+    //lấy giá trị đánh giá
+    $('.ui.rating').rating('setting', 'onRate', function (value) {
+        // your amazing code here
+        socket.emit("rate-comment", { value: value })
+        console.log(
+            $(this).data('user'),
+            window.location.href
+        )
+        console.log(value)
+    });
+    //xử lí tác vụ liên quan đến trả lời bình luận
+        //hiển thị ô input để người dùng nhập trả lời bình luận
+    function addReply(idComment) {
+        let templateBtnReply = `
+            <form class="ui reply form">
+                <div class="field">
+                    <textarea></textarea>
+                </div>
+                <button class="ui blue labeled submit icon button" type="button" onclick='createReplyComment.call(this, "${idComment}")'>
+                    <i class="icon edit" ></i> Thêm câu trả lời
+                </button>
+            </form>
+        `
+        $(".ui.reply.form").remove()
+        console.log($(this).parent().parent().next())
+        $(this).parent().parent().next().append(templateBtnReply)
+    }
+        //tạo mới câu trả lời cho bình luận
+    function createReplyComment(idComment){
+        let contentReply = $(this).prev().find("textarea").val();
+        $.ajax({
+            url: '/reply-comment',
+            method: "POST",
+            data:{
+                idComment,
+                content: contentReply
+            }
+        }).then((response) => {
+            $(this).parent().parent().find("div[class='display-more-reply-comment']").text("Hiển thị thêm trả lời bình luận")
+            $(this).parent().remove();
+        })
+    }
+        //xử lí khi người dùng muốn hiển thị thêm trả lời bình luận
+    function displayReplyComment(idCommnent){
+        console.log(idCommnent, "hrere")
+        let that = this;
+        $.ajax({
+            url: "/reply-comment/"+idCommnent,
+            method: 'GET'
+        }).then(function(response){
+            response.data.forEach((item)=>{
+                renderDisplayReplyComment(that, item)
+            })
+        })
+    }
+    //hết xử lí tác vụ liên quan đến trả lời bình luận
+    {{!-- Tác vụ liên quan đến comment --}}
+    function displayNoneComment(idComment){
+        $("#modal-none-comment").css("display", "flex");
+
+        $(".displayComment").click(function(){
+            $("#modal-none-comment").css("display","none")
+        })
+        let count = 0;
+        let that = this;
+        let status = $(this).attr("status")
+        if(status=== 'none'){
+            $("#modal-commment-text").text("Bạn chắc chắn muốn ẩn bình luận?");
+        }
+        if(status=== 'active'){
+            $("#modal-commment-text").text("Bạn chắc chắn muốn hiện bình luận?")
+        }
+        $("#btn-success-display-none-comment").click(function(){
+            $.ajax({
+                url: "/comment/change-status/"+idComment,
+                method: "PUT",
+                data:{
+                    status: status
+                }
+            }).then(function(response){
+                console.log("Res", response)
+                if(response.status === 200){
+                    $("#modal-none-comment").css("display","none");
+                    if(response.data.status=== 'none'){
+                        $(that).text("Hiện")
+                        $(that).attr("status", "active")
+                        $(that).parent().parent().parent().addClass("banned");
+                        $(that).parent().parent().parent().find(".author").css("text-decoration","line-through")
+                        $(that).parent().parent().parent().find(".text").children().text(`Nội dung bị ẩn vì vi phạm do chứa nội dung bị cấm`)
+
+                        $(that).parent().parent().parent().find(".ui.rating").css("display","none")
+                        $(that).parent().parent().parent().find(".ui.rating").next().css("display","none")
+                        $(that).parent().parent().parent().find(".reply").css("display","none")
+                    }
+                    if(response.data.status=== 'active'){
+                        $(that).text("Ẩn")
+                        $(that).attr("status", "none")
+                        $(that).parent().parent().parent().removeClass("banned")
+                        $(that).parent().parent().parent().find(".author").css("text-decoration","none")
+                        $(that).parent().parent().parent().find(".ui.rating").css("display","inline-block")
+                        $(that).parent().parent().parent().find(".text").children().text(`${response.data.content}`)
+                        
+                        $(that).parent().parent().parent().find(".ui.rating").next().css("display","inline-block")
+                        $(that).parent().parent().parent().find(".ui.rating").next().text(`${response.data.rate.length}`)
+                        $(that).parent().parent().parent().find(".reply").css("display","inline-block")
+
+                    }
+                }
+            })
+        })
+    }
+
+    //hiển thị thêm nội dung bình luận
+
+    function viewMoreComment(){
+        let indexCommentNow = parseInt($(this).attr("data-now"));
+        let totalComment = parseInt($(this).attr("data-comment"));
+        let commentPerPage = parseInt($(this).attr("data-perpage"));
+        let maxPage = Math.ceil(totalComment/commentPerPage)
+        if(indexCommentNow > maxPage){
+            $(this).css("display","none")
+            return;
+        }
+        if(indexCommentNow == maxPage - 1 ){
+            let existComment = totalComment - (maxPage-1)*commentPerPage;
+            for(let index = indexCommentNow*commentPerPage; index <  (indexCommentNow*commentPerPage)+existComment;index++){
+                 if(index === totalComment){
+                    $(this).css("display","none")
+                    break;
+                }
+                $($(".comment")[index]).css("display","block")
+            }
+            indexCommentNow += 1;
+            $(this).attr("data-now",`${indexCommentNow}`);
+            $(this).css("display","none")
+            return;
+        }
+        if(indexCommentNow < maxPage){
+            for(let index = indexCommentNow*commentPerPage; index < (indexCommentNow*commentPerPage)+commentPerPage;index++){
+                if(index === totalComment){
+                    $(this).css("display","none")
+                    break;
+                }
+                $($(".comment")[index]).css("display","block")
+            }
+            indexCommentNow += 1;
+            $(this).attr("data-now",`${indexCommentNow}`);
+            return;
+        }
+
+    }
+    //xóa comment
+    function handleDeleteComment(idComment){
+        let that = this;
+        $.ajax({
+            url: "/comment/"+idComment,
+            method: "DELETE"
+        }).then(function(response){
+            if(response.status === 200){
+                $(that).parent().parent().parent().empty();
+            }
+        })
+    }
+
+    $(document).ready(function () {
+        //ẩn modal xác nhận
+        //thêm commnent cho bài viết
+        $("#add-comment").click(function () {
+            let contentComment = $('#content-add-comment').val();
+            let idCourse = window.location.href.split("/courses/")[1].substring(0, 25)
+            $.ajax({
+                url: "/comment",
+                method: "POST",
+                data:{
+                    content: contentComment,
+                    idCourse: idCourse
+                }
+            }).then((response) => {
+                alert(idCourse)
+                window.location.href =  "/courses/"+idCourse
+            }).catch((err) => {
+                console.log(err)
+            })
+        });
+
+    });
+</script>

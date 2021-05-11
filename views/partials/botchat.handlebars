@@ -1,0 +1,185 @@
+
+<div class="msg-admin-main">
+    <div id="msg-admin" class="msg-admin">
+        <h4 id="title-admin" class="title-admin">I'm HeHe!</h4>
+    </div>
+    <div id="screen-msg" class="screen-msg screen-msg-none">
+        <div class="header-screen-msg">
+            <span class="text-light" id="tags-title"><b>Bot chat HeHe</b></span>
+            <span class="text-light" title="Đónng cửa sổ chat" id="close-msg-admin"><h1>&times;</h1></span>
+        </div>
+        <div id="body-screen-msg" class="body-screen-msg">
+            {{#if login}}
+            <div class="admin-feed">
+                <img src="/img/bot.jpg" alt="HeHe">
+                <span></span>
+                Chào mừng <b>{{name}}</b> đã tới với <b class="text-danger">Cnow</b>.
+                Tôi có thể giúp bạn tìm hiểu về:
+                Khóa học, học phí, các ngôn ngữ xây dựng nên <b class="text-danger">Cnow</b>,...
+                <small id="time__now"></small>
+            </div>
+            {{else}}
+            <div class="admin-feed">
+                <img src="/img/bot.jpg" alt="HeHe">
+                <span></span>
+                    Chào bạn tôi là <b id="hehe" style="cursor: pointer;">HeHe</b> tôi được lập trình để trả lời 1 số câu hỏi của bạn. <br>
+                    Hãy <a href="/login"> ĐĂNG NHẬP </a>để bắt đầu học tập tại <b class="text-danger">Course Online</b> <br>
+                <small id="time__now"></small>
+            </div>
+            {{/if}}
+        </div>
+        <div class="foot-screen-msg">
+            <input id="enter-msg" type="text" placeholder="Nhập nội dung..." autocomplete = "off">
+            <div class="laugh">
+                <span><i class="fas fa-paperclip"></i><span>Tệp đính kèm</span></span>
+                <span><i class="far fa-laugh"></i><span>Biểu cảm</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        let screenMsg = document.querySelector('#screen-msg');
+        let bodyMsg = document.querySelector('#body-screen-msg');
+        let enterMsg = document.querySelector('#enter-msg');
+        let Admin = document.querySelector('#msg-admin');
+        let closeScreen = document.querySelector('#close-msg-admin');
+        let countEnter = 0;
+        let Datenew = new Date();
+        const Daten = new Date();
+        const timenow = Daten.getHours() + ":" + Daten.getMinutes();
+        const mainadmin = document.querySelector('#body-screen-msg');
+        const Steptime = 1000;
+        const botfeed = enterMsg.value.toLowerCase();
+        const Hour = Daten.getHours();
+        const firstMsg = document.querySelector('#time__now');
+        firstMsg.innerHTML = timenow;
+
+        const botChat = {
+            renderview: function(value) {
+                if (mainadmin) {
+                    const newMsg2 = document.createElement('div');
+                        newMsg2.classList.add('admin-feed');
+                        newMsg2.innerHTML = `
+                        <img src="/img/bot.jpg" alt="HeHe">
+                            <span></span>
+                            <div class="loading"></div>
+                        `;
+                        setTimeout(()=>{
+                            newMsg2.innerHTML = `
+                            <img src="/img/bot.jpg" alt="HeHe">
+                            <span></span>
+                            ${value}
+                            <small>${timenow}</small>
+                            `;
+                        }, Steptime)
+                    mainadmin.appendChild(newMsg2);
+                }
+            },
+            question: function() {
+                const _this = this;
+                enterMsg.addEventListener ("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        countEnter++;
+                        event.preventDefault();
+                        _this.addElement()
+                        _this.handleQA(removeVietnameseTones(enterMsg.value))
+                        enterMsg.value = ""; 
+                        bodyMsg.scrollTo(0,10000000000000);
+                        setTimeout(()=>{
+                            bodyMsg.scrollTo(0,10000000000000);
+                        }, Steptime)
+                    }
+                })
+            },
+            addElement: function () {
+                const main = document.querySelector('#body-screen-msg');
+                if (main) {
+                    const newMsg = document.createElement('div');
+                        newMsg.classList.add('user-chat');
+                        newMsg.innerHTML = `
+                        {{#if admin}}
+                        <img src="/img/admin.jpg" alt="User">
+                        {{else}}
+                        <img src="/img/userchat.png" alt="User">
+                        {{/if}}
+                        <span></span>${enterMsg.value}
+                        <small>${timenow}</small>
+                        `;
+                    main.appendChild(newMsg);
+                }
+            }
+            ,
+            handleQA: function (value) {
+                if (value.includes('hello')||value.includes('chao ban')||value.includes('chao')&&value.includes('xin')) {
+                    {{#if login}}
+                    this.renderview('Xin chào {{name}}')
+                    {{else}}
+                    this.renderview('Xin chào tớ thấy bạn chưa đăng nhập, hãy <a class="text-primary" href="/login">Đăng nhập </a>để bắt đầu học tập nhé')
+                    {{/if}}
+                }
+                else if (value.includes('khoa hoc')) {
+                    this.renderview('Hiện tại có {{num}} khóa học')
+                }
+                else if (value.includes('hoc phi')) {
+                    this.renderview('Tất cả khóa học tại <b class="text-danger"> Course Online </b> đều <b class="text-info"> miễn phí </b>')
+                }
+                else {
+                    if (countEnter < 10) {
+                        this.renderview('Tớ vẫn đang học, vì vậy có thể vẫn chưa hiểu câu hỏi của bạn!')
+                    }
+                    else {
+                        this.renderview('Bạn có thể gửi tin cho quản trị viên tại <a class="text-primary" href="/"> TRANG CHỦ </a>')
+                    }
+                }
+            }
+            ,
+            start: function () {
+                this.question()
+            }
+        }
+        botChat.start()
+
+    Admin.onclick = function (){
+        screenMsg.classList.remove('screen-msg-none');
+        Admin.classList.add('msg-admin-2');
+    }
+
+    closeScreen.onclick = function (){
+        screenMsg.classList.add('screen-msg-none');
+        Admin.classList.remove('msg-admin-2');
+        Admin.classList.add('msg-admin-3');
+        setTimeout(()=>{
+            Admin.classList.remove('msg-admin-3');
+        }, 400)
+    }
+
+    function removeVietnameseTones(str) {
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+        str = str.replace(/đ/g,"d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+        // Some system encode vietnamese combining accent as individual utf-8 characters
+        // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+        str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+        str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+        // Remove extra spaces
+        // Bỏ các khoảng trắng liền nhau
+        str = str.replace(/ + /g," ");
+        str = str.trim();
+        // Remove punctuations
+        // Bỏ dấu câu, kí tự đặc biệt
+        str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+        return str;
+    }
+</script>
+

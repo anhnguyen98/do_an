@@ -1,0 +1,116 @@
+<div class="view_show_main">
+    <div class="tab_view">
+        <div class="screen_video">
+            <div class="name_video"></div>
+            <div class="video_src">
+                <div class="iframe_video" id="player" src=""></div>
+            </div>
+             {{> course/mulTabCourse}}
+        </div>
+        <div class="video_list">
+            <div class="title_list">Danh sách bài học</div>
+            <div class="list_lessons"></div>
+        </div>
+    </div>
+</div>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+ 
+    const S = document.querySelector.bind(document);
+    const SA = document.querySelectorAll.bind(document);
+
+    const listLessons = S('.list_lessons');
+    const ScreenYT = S('.video_src');
+    const iframeVideo = S('.iframe_video');
+    const lessonBtn = S('.video_list');
+    const nameLesson = S('.name_video');    
+    const STORAGE_INDEX_VIDEO = 'video';
+
+    let IDvideo;
+
+    const videoIframe = {
+        indexFirst: 0,
+        videos: [
+            {{#each course.idVideo}}
+                
+                { 
+                    src: '{{this}}', 
+                    namevideo: '{{lookup ../course.nameLesson @index}}'
+                }
+                ,
+            {{/each}}
+        ],
+        config: JSON.parse(localStorage.getItem(STORAGE_INDEX_VIDEO)) || {},
+        setConfig: function (index, value) {
+            this.config[index] = value;
+            localStorage.setItem(STORAGE_INDEX_VIDEO, JSON.stringify(this.config));
+        },
+        idvideo: function () {
+            IDvideo = this.videos[this.indexFirst].src;
+        },
+        events: function () {
+            const _this = this;
+            lessonBtn.onclick = function (e) {
+                const lesson = e.target.closest('.lesson_item:not(.active)')
+
+                if (lesson && e.target.closest('.lesson_item') ) {
+                    if (lesson) {
+                        _this.indexFirst = Number(lesson.dataset.index);
+                        _this.setConfig('indexVideo', _this.indexFirst);
+                        player.loadVideoById(_this.videos[_this.indexFirst].src)
+                        _this.idvideo();
+                        _this.render();
+                        _this.namevideo();
+                    } 
+                }     
+            }
+        },
+        namevideo: function () {
+            nameLesson.innerHTML = 'Bài ' + this.videos[this.indexFirst].namevideo
+        },
+        render: function () {
+            const htmlList = this.videos.map((lesson, index)=> { 
+            return `<div class="lesson_item ${index === this.indexFirst ? 'active' : ''}" data-index="${index}">
+                        <span class="playing"><i class="far fa-play-circle"></i></span>
+                        <span class="pause"><i class="far fa-pause-circle"></i></span>
+                        <div class="name_leson">Bài ${index}: ${lesson.namevideo}</div> 
+                    </div>`
+            })
+            listLessons.innerHTML = htmlList.join('');
+        },
+        start: function () {
+            if (this.config.indexVideo) this.indexFirst = this.config.indexVideo;
+            if ( this.indexFirst >= this.videos.length) this.indexFirst = 0;
+            this.events();
+            this.idvideo();
+            this.render();
+            this.namevideo();
+        }            
+    }
+    videoIframe.start();
+    var player, playing = false;
+    function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        videoId: `${IDvideo}`,
+        events: {
+            'onStateChange': onPlayerStateChange
+            }
+        });
+        
+    }
+
+    function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        const lessonPlaying = S('.list_lessons .active');
+        lessonPlaying.classList.add('play');
+        playing = true;
+    }
+    else if(event.data == YT.PlayerState.PAUSED){
+        const lessonPlaying = S('.list_lessons .active');
+        lessonPlaying.classList.remove('play');
+        playing = false;
+        }
+    } 
+</script>
+

@@ -1,0 +1,26 @@
+<input hidden class="check__sidemenu" type="checkbox"  id="check__sidemenu">
+<label for="check__sidemenu" class="side__menu" id="sidemenu">
+    <ul>
+        <li ><a href="/course" ><b>Tất cả khóa học</b></a></li>
+        <li ><a href="/frontend" ><b>Front-end</b></a></li>
+        <li ><a href="/backend" ><b>Back-end</b></a></li>
+    </ul>
+    <span>
+        <i class="fas fa-ellipsis-v"></i>
+    </span>
+</label>
+<script>
+    var btnSide = document.querySelectorAll('#sidemenu li');
+    var btna = document.querySelectorAll('#sidemenu a');
+    var title = document.getElementById('title');
+
+    if( title.innerHTML === 'Khóa học'){
+        btna[0].classList.add('btn-success')
+    }
+    if( title.innerHTML === 'Frontend'){
+        btna[1].classList.add('btn-success')
+    }
+    if( title.innerHTML === 'Backend'){
+        btna[2].classList.add('btn-success')
+    }
+</script>
