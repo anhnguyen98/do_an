@@ -6,9 +6,9 @@
 
     <form class="ui add form ">
         <div class="field">
-            <textarea id="content-add-comment"></textarea>
+            <textarea id="content-add-comment" onkeyup="changeContentAddComment.call(this)"></textarea>
         </div>
-        <button class="ui blue labeled submit icon button" type="button" id="add-comment">
+        <button class="ui blue labeled submit icon button" type="button" style="cursor: no-drop;"  id="add-comment"  disabled>
             <i class="icon edit"></i> Thêm bình luận
         </button>
     </form>
@@ -32,16 +32,41 @@
 </div>
 
 <script>
-
+    function changeContentAddComment(){
+        let type = null;
+        clearTimeout(type);
+        let that = this;
+        type = setTimeout(function() {
+            let typeVal = $(that).val();
+            if(typeVal == ""){
+                $("#add-comment").attr("disabled", "true");
+                $("#add-comment").css("cursor", "no-drop"); 
+                return;
+            }
+            $("#add-comment").removeAttr("disabled");
+            $("#add-comment").css("cursor", "pointer"); 
+        }, 100);
+    }
     //lấy giá trị đánh giá
     $('.ui.rating').rating('setting', 'onRate', function (value) {
         // your amazing code here
-        socket.emit("rate-comment", { value: value })
-        console.log(
-            $(this).data('user'),
-            window.location.href
-        )
-        console.log(value)
+        let idComment = $(this).data('idcomment')
+        let that = this;
+        $.ajax({
+            url: "/comment/rate/"+idComment,
+            method: "PUT",
+            data:{
+                idComment,
+                rate: value
+            }
+        }).then(function(response){
+            if(response.status === 200){
+                let totalRate = response.data.rate && response.data.rate.length ? response.data.rate.reduce((total, rateElement) => {
+                    return total + rateElement.rate
+                }, 0) : 0
+                $(that).next().text(`${totalRate}`)
+            }
+        })
     });
     //xử lí tác vụ liên quan đến trả lời bình luận
         //hiển thị ô input để người dùng nhập trả lời bình luận
@@ -75,19 +100,6 @@
             $(this).parent().remove();
         })
     }
-        //xử lí khi người dùng muốn hiển thị thêm trả lời bình luận
-    function displayReplyComment(idCommnent){
-        console.log(idCommnent, "hrere")
-        let that = this;
-        $.ajax({
-            url: "/reply-comment/"+idCommnent,
-            method: 'GET'
-        }).then(function(response){
-            response.data.forEach((item)=>{
-                renderDisplayReplyComment(that, item)
-            })
-        })
-    }
     //hết xử lí tác vụ liên quan đến trả lời bình luận
     {{!-- Tác vụ liên quan đến comment --}}
     function displayNoneComment(idComment){
@@ -113,7 +125,6 @@
                     status: status
                 }
             }).then(function(response){
-                console.log("Res", response)
                 if(response.status === 200){
                     $("#modal-none-comment").css("display","none");
                     if(response.data.status=== 'none'){
@@ -199,9 +210,15 @@
 
     $(document).ready(function () {
         //ẩn modal xác nhận
+
         //thêm commnent cho bài viết
         $("#add-comment").click(function () {
             let contentComment = $('#content-add-comment').val();
+            var lt = /</g, 
+                gt = />/g, 
+                ap = /'/g, 
+                ic = /"/g;
+            contentComment = contentComment.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
             let idCourse = window.location.href.split("/courses/")[1].substring(0, 25)
             $.ajax({
                 url: "/comment",
@@ -211,7 +228,6 @@
                     idCourse: idCourse
                 }
             }).then((response) => {
-                alert(idCourse)
                 window.location.href =  "/courses/"+idCourse
             }).catch((err) => {
                 console.log(err)

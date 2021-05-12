@@ -23,7 +23,10 @@ const CommentSchema = new Schema({
         type: String,
         ref: "posts"
     },
-    rate: [],
+    rate: [{
+        idUser: String,
+        rate: Number
+    }],
     status: {
         type: String,
         default: "active"

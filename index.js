@@ -161,33 +161,51 @@ app.engine('handlebars', exphbs({
             function viewRateComment(idUser, comment, courseId){
                 let amountDating = comment.rate;
                 if(comment.status === "active"){
-                    if(amountDating.length){
+                    if(comment.rate && amountDating.length){
+                        let count = 0;
                         for(let i = 0; i < amountDating.length; i++){
                             if(String(amountDating[i].idUser) == String(idUser)){
-                                return `
-                                    <span class="ui rating" data-rating="1" data-max-rating="1" data-idcourse="${courseId}" data-user=${idUser}></span> 
-                                    <span>${amountDating.length}</span> 
-                                `
+                                count++;
                             }
+                        }
+                        if(count){
+                            return `
+                                <span class="ui rating" data-rating="1" data-max-rating="1" data-idcomment="${comment._id}"></span> 
+                                <span>${amountDating.length}</span> 
+                            `
+                        }else{
+                            return `
+                                <span class="ui rating" data-rating="0" data-max-rating="1" data-idcomment="${comment._id}"></span>
+                                <span>${amountDating.length}</span> 
+                            `
                         }
                    }else{
                      return `
-                        <span class="ui rating" data-rating="0" data-max-rating="1" data-idcourse="${courseId}" data-user=${idUser}></span>
+                        <span class="ui rating" data-rating="0" data-max-rating="1" data-idcomment="${comment._id}"></span>
                         <span>0</span> 
                      `
                    }
                 }else{
-                    if(amountDating.length){
+                    if(comment.rate && amountDating.length){
+                        let count = 0;
                         for(let i = 0; i < amountDating.length; i++){
                             if(String(amountDating[i].idUser) == String(idUser)){
-                                return `
-                                    <span class="ui rating" data-rating="1" data-max-rating="1" data-idcourse="${courseId}" data-user=${idUser} style="display: none"></span>
-                                    <span></span>
-                                `
+                                count++;
                             }
                         }
+                        if(count){
+                            return `
+                                <span class="ui rating" data-rating="1" data-max-rating="1" data-idcomment="${comment._id}" style="display: none"></span> 
+                                <span>${amountDating.length}</span> 
+                            `
+                        }else{
+                            return `
+                                <span class="ui rating" data-rating="0" data-max-rating="1" data-idcomment="${comment._id}" style="display: none"></span>
+                                <span>${amountDating.length}</span> 
+                            `
+                        }
                    }else{
-                     return `<span class="ui rating" data-rating="0" data-max-rating="1" data-idcourse="${courseId}" data-user=${idUser} style="display: none"></span>
+                     return `<span class="ui rating" data-rating="0" data-max-rating="1" data-idcomment="${comment._id}" style="display: none"></span>
                             <span></span>
                         `
                    }
@@ -202,12 +220,16 @@ app.engine('handlebars', exphbs({
                     }else{
                         return `<span style="color: blue !important; cursor: pointer; padding-right: 5px;" status="active" onclick='displayNoneComment.call(this, "${comment._id}")'> Hiện </span>`
                     }
+                }else{
+                    return ``
                 }
             }
             function deleteComment(idUserNow, comment, position){
                 let idUserInComment = comment.idUser._id;
                 if(idUserNow === idUserInComment || position === "admin"){
                     return `<span style="color: red !important; cursor: pointer" onclick="handleDeleteComment.call(this, '${comment._id}')"> Xóa </span>`
+                }else{
+                    return ``
                 }
             }
 
