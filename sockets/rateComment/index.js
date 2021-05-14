@@ -3,6 +3,7 @@ let rateComment = (io) => {
         socket.on("rate-comment", (data) => {
             console.log(data, "dataaaaaaaaa");
             console.log(socket.request.user);
+            
         })
     })
 }

@@ -15,7 +15,7 @@ const session = require('./config/session');
 const passportSocketIo = require("passport.socketio");
 const cookieParser = require("cookie-parser")
 
-const formatTime = require("./ulti/formatTime")
+const formatTime = require("./ulti/formatTime");
 
 const app = express();
 
@@ -369,6 +369,121 @@ app.engine('handlebars', exphbs({
             }
                 
             
+        },
+        message: (user, contentMessage, indexMessage) => {
+            if(parseInt(indexMessage) === 0) {
+                if(String(user._id )=== String(contentMessage.senderId)){
+                    
+                    return  `
+                        <div class="chat user-chat" data-idse="${contentMessage.senderId}" data-idre="${contentMessage.receiverId}">
+                            <img src="/img/bot.jpg" alt="HeHe">
+                            <span>
+                            </span>
+                            ${contentMessage.text}
+                            <small id="time__now">${formatTime(contentMessage.createdAt)}</small>
+                        </div>
+                    `
+                }
+                
+                return `
+                    <div class="chat admin-feed" data-idse="${contentMessage.senderId}" data-idre="${contentMessage.receiverId}>
+                        <img src="/img/bot.jpg" alt="HeHe">
+                        <span></span>
+                        ${contentMessage.text}
+                        <small id="time__now">${formatTime(contentMessage.createdAt)}</small>
+                    </div>
+                `
+            }
+            if(String(user._id )=== String(contentMessage.senderId)){
+                
+                return  `
+                    <div class="chat user-chat">
+                        <img src="/img/bot.jpg" alt="HeHe">
+                        <span>
+                        </span>
+                        ${contentMessage.text}
+                        <small id="time__now">${formatTime(contentMessage.createdAt)}</small>
+                    </div>
+                `
+            }
+            
+            return `
+                <div class="chat admin-feed">
+                    <img src="/img/bot.jpg" alt="HeHe">
+                    <span></span>
+                    ${contentMessage.text}
+                    <small id="time__now">${formatTime(contentMessage.createdAt)}</small>
+                </div>
+            `
+        },
+        contact: (allConversationsWithMessage) =>{
+            if(allConversationsWithMessage.length){
+                let previewMessage = (message)=>{
+                    let content = message[message.length - 1].text
+                    if(content.length > 11){
+                        return message[message.length - 1].text.substr(0, 11) +"<span>...</span>"
+                    }
+                    return content;
+                    
+                }
+                for(let index = 0; index< allConversationsWithMessage.length; index++){
+                    let url = "/message?thread="+allConversationsWithMessage[index]._id
+                    return `
+                    <a href=${url} class="room-chat">
+                        <li class="person" data-chat="contact._id">
+                            <div class="left-avatar">
+                                <div class="dot"></div>
+                                <img src="${allConversationsWithMessage[index].avatar}" alt="">
+                            </div>
+                            <span class="name" style="display:block">${allConversationsWithMessage[index].fullName}</span>
+                            <p class="preview">${previewMessage(allConversationsWithMessage[index].messages)} </p>
+                            <span class="time">${formatTime(allConversationsWithMessage[index].createAt)}</span>
+                        </li>
+                    </a>
+                ` 
+                }
+                return ``;  
+            }else{
+                return `<li class="person"> Bạn chưa có tin nhắn nào </li>`
+            }
+        },
+        viewMessage: (currentUser, messages, statusMessage, infoUserReceiver) => {
+            let checkAuthorMessage = (message)=>{
+                let template = ``;
+                for(let index = 0; index < messages.length; index++){
+                    if(String(currentUser._id) === String(message[index].senderId)){
+                        template += `
+                            <div class="bubble you" data-mess-id="${message[index]._id}">
+                                ${message[index].text}
+                            </div>
+                        `
+                    }else{
+                        template += `
+                            <div class="bubble me" data-mess-id="${message[index]._id}">
+                                ${message[index].text}
+                            </div>
+                        `
+                    }
+                }
+                return template
+
+            }
+            if(statusMessage){
+                if(messages.length){
+                        return `
+                            <div class="top" data-id=${infoUserReceiver._id}>
+                                <span>To: <span class="name">${ infoUserReceiver.fullName}</span></span>
+                            </div>
+                            <div class="content-chat" id="content-chat">
+                                <div class="chat" id="chat-element">
+                                    ${checkAuthorMessage(messages)}
+                                </div>                               
+                            </div>
+                        `
+                    }
+                return    `<p> Bạn chưa có cuộc hội thoại nào</p>` 
+            }
+            return `<p> Chọn một chuỗi tin nhắn mà bạn muốn đọc nó</p>`
         }
     }
 }));

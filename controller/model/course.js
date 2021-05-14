@@ -17,7 +17,11 @@ const Course = new Schema({
     commentId:[{
         type: String,
         ref: "comments"
-    }]
+    }],
+    teacher: {
+        type: String,
+        ref: "users"
+    }
 },{
     timestamps:true,
 });

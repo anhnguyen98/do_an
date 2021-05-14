@@ -1,5 +1,5 @@
-const mmtimezone = require('moment-timezone');
+const moment = require('moment');
 let formatTime = (time) => {
-    return mmtimezone(time).tz("Asia/Ho_Chi_Minh").format('DD-MM-YYYY HH:mm:ss');
+    return moment(time).locale("vi").startOf("seconds").fromNow()
 }
 module.exports = formatTime

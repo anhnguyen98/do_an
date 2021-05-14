@@ -3,10 +3,10 @@ const { mongooseToObject } = require('../ulti/mongoose');
 const Course = require('./model/course');
 const User = require('./model/user');
 const Feed = require('./model/feedback');
-
+const ContactModel = require("./model/contact")
+const MessageModel = require("./model/message")
 class CourseController{
     show(req, res, next){
-        const title = 'Khóa học '+req.params.idCourse;
         Course.findOne({ _id: req.params.idCourse })
         .populate({ 
             path: 'commentId',
@@ -15,19 +15,49 @@ class CourseController{
               model: 'users'
             } 
          })
+         .populate("teacher", "_id user fullName")
          .exec()
         .then(course =>{
+            const title = 'Khóa học '+course.slug;
             if(course){
                 User.findOne({_id: req.signedCookies.userId})
-                .then(data=>{
+                .then(async data=>{
                     if (data.learning.includes(req.params.idCourse) == false){
                         User.update({_id: req.signedCookies.userId}, {$push:{learning: req.params.idCourse}})
                         .then()
                         Course.updateOne({idCourse: req.params.idCourse}, {numberStudents: course.numberStudents+1})
-                        .then()                            
+                        .then() 
+                        ContactModel.create({
+                            userId: course.teacher._id,
+                            contactId: data._id
+                        }).then() 
+                        MessageModel.create({
+                            senderId: course.teacher._id,
+                            receiverId: req.signedCookies.userId,
+                        })
                     }
+                    let listMessage = await MessageModel.find({
+                        $or: [{
+                           $and: [{
+                               "senderId" : course.teacher._id,
+                               "receiverId":  req.signedCookies.userId
+                           }] 
+                        },{
+                            $and: [{
+                                "receiverId" : course.teacher._id,
+                                "senderId": req.signedCookies.userId
+                            }] 
+                         }] 
+                    }).sort({"createdAt": 1}).limit(10).exec();
                     res.cookie('khoahoc',course.idCourse)
-                    res.render('show', {user: {_id: data._id, position: data.position}, position: data.position, replyComment: {}, course: mongooseToObject(course), title})
+                    res.render('show', {
+                        user: {_id: data._id, position: data.position}, 
+                        position: data.position, 
+                        course: mongooseToObject(course), 
+                        title,
+                        listMessage,
+                        countMessage: 0
+                    })
                 });
                 
             }else{

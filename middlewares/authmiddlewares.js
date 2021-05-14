@@ -34,7 +34,7 @@ module.exports.requireAdmin = function(req, res, next){
 };
 
 module.exports.requireLogin = function(req, res, next){
-    if(req.signedCookies.userId){
+    if(!req.signedCookies.userId){
         res.redirect('/');
         return;
     }

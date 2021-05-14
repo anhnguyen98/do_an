@@ -65,8 +65,16 @@ class CommentController {
 
     async deleteComment(req, res, next){
         try {
-            let {idComment} = req.params
+            let {idComment} = req.params;
+            let infoComment = await CommentModel.findOne({_id: idComment})
             await  CommentModel.deleteOne({_id: idComment});
+            await CourseModel.updateOne({
+                _id: infoComment.idCourse
+            }, {
+                $pull: {
+                    commentId: idComment
+                }
+            })
             return res.json({
                 status:200,
                 message: "Xóa bình luận thành công",
