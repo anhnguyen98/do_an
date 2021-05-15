@@ -1,0 +1,33 @@
+{
+  "name": "mvc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Duy Khanh",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.2",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "express-session": "^1.17.1",
+    "get-video-id": "^3.2.0",
+    "md5": "^2.3.0",
+    "mongoose": "^5.10.15",
+    "mongoose-slug-generator": "^1.0.4",
+    "multer": "^1.4.2",
+    "node-localstorage": "^2.1.6",
+    "nodemon": "^2.0.6",
+    "slugify": "^1.5.3",
+    "tinyduration": "^3.2.1",
+    "updated-youtube-info": "^1.4.7",
+    "uuid": "^8.3.2"
+  }
+}

@@ -1,0 +1,185 @@
+<div class="header">
+        <div class="logo__link ml-4">
+            <a href="/"><h3><b>KMA</b></h3></a>
+        </div>
+        <div class="header__link">
+          <div class="items__link">
+              <a href="/"><b>Trang chủ</b></a>
+          </div>
+          <div class="items__link">
+              <a href="/course"><b>Khóa học</b></a>
+          </div>
+        </div>
+    <div class="header__auth">
+      {{#if login}}
+      <div class="avatar">
+        {{#if admin}}
+        <img src="/img/admin.jpg" alt="">
+        <span class="text-danger"><b>{{name}}</b></span>
+        {{else}}
+        <img src="/img/userchat.png" alt="">
+        <span>{{name}}</span>
+        {{/if}}
+      </div>
+      <div class="line__"></div>
+      <div class="__auth__login">
+          <div class="__auth_items">
+              <span class="bookmark__header">
+                <i class="fas fa-bookmark"></i>
+              </span>
+          </div>
+          <div class="__auth_items">
+              <span id="bell_check" class="bell__header">
+                <i class="fas fa-bell"></i>
+              </span>
+              <div id="msg__bell_haeder" class="msg__bell_haeder">
+                <header><small><b>Thông báo</b></small></header>
+                <div class="body_bell_show">
+                  <p>Chào mừng <b>{{name}}</b> đã tới với <b class="text-danger">KMA</b> !</p> 
+                </div>
+                <span></span>
+              </div>
+          </div>
+          <div class="__auth_items_menu">
+              <div class="__check_menu" >
+                    <span id="show__logout__btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></span>
+                    <div class="___log_out">
+                        <div class="table__log_out">
+                            <h5 class="text-center">Bạn chắc chắn muốn đăng xuất?</h5>
+                            <div class="btn__log__out">
+                              <div class="__yes_logout">
+                                <a class="btn btn-info" href="/logout">Đăng xuất</a>
+                              </div >
+                              <div class="___no_logout">
+                                <span id="back__logout" class="btn btn-secondary">Trở về</span>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+              <input hidden class="nav__input_check" type="checkbox" id="checkmenu">
+              <label for="checkmenu" class="layout__menu"></label>
+              <div id="nav" class="show___menu">
+                <label for="checkmenu" class="close__menu" >
+                  <i class="fas fa-ellipsis-v"></i>
+                </label>
+                <div class="main__menu_show">
+                  {{#if admin}}
+                  <div class="items__menu_auth">
+                    <a href="/admin"><i class="fas fa-user-cog"></i> Quản lí</a>
+                  </div>
+                  {{/if}}
+                  <div class="items__menu_auth">
+                    <a href="https://facebook.com/" target="_blank"><i class="fab fa-facebook"></i> Fanpage</a>
+                  </div>
+                  <div class="items__menu_auth">
+                    <a href="/courses/feedback"><i class="fas fa-envelope"></i> Góp ý</a>
+                  </div>
+                  <div class="items__menu_auth">
+                    <a href="/profile"><i class="fas fa-cog"></i> Cài đặt</a>
+                  </div>
+                </div>                  
+              </div>
+          </div>
+      </div>
+      <script>
+        var backLogout = document.getElementById('back__logout');
+        var showLogout = document.getElementById('show__logout__btn');
+        backLogout.onclick = function() {
+         document.getElementsByClassName('___log_out')[0].style.display = 'none'
+        }
+        showLogout.onclick = function() {
+         document.getElementsByClassName('___log_out')[0].style.display = 'flex'
+        }
+
+        $(window).scroll(function () {
+              if ($(window).scrollTop() >= 61) {
+                  $('#nav').addClass('navbar-fixed-top');
+              } else {
+                  $('#nav').removeClass('navbar-fixed-top');
+              }
+          });
+      </script>
+      {{else}}
+      <div class="__auth__login">
+        <div class="__auth_items">
+          <a href="/login"><b>Đăng nhập</b></a>
+        </div>
+        <div class="__auth_items">
+          <a href="/signup"><b>Đăng ký</b></a>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+</div>
+
+{{!-- mobile responsive --}}
+<div class="header__modile">
+    <div class="logo__link ml-2">
+            <a href="/"><h3><b>KMA</b></h3></a>
+    </div>
+    <div class="header__auth">
+        <div class="__auth__login">
+          <div class="__auth_items">
+              <span><i class="fas fa-bookmark"></i></span>
+          </div>
+          <div class="__auth_items">
+              <span><i class="fas fa-bell"></i></span>
+          </div>
+          <label for="checkmenu_mobile" class="__auth_items">
+              <span><i class="fas fa-bars"></i></span>
+          </label>
+          <input hidden class="nav__input_check_mobile" type="checkbox" id="checkmenu_mobile">
+          <div class="menu__header_mobile">
+              <label for="checkmenu_mobile" class="colse__mobile">
+                &times;                
+              </label>
+              {{#if login}}
+              <div class="avatar">
+                {{#if admin}}
+                <img src="/img/admin.jpg" alt="">
+                <span class="text-danger"><b>{{name}}</b></span>
+                {{else}}
+                <img src="/img/userchat.png" alt="">
+                <span>{{name}}</span>
+                {{/if}}
+              </div>
+              {{/if}}
+              <div class="list__menu__mobile">
+                  <div class="items__mobile">
+                    <a href="/"><i class="fas fa-home"></i>Trang chủ</a>
+                  </div>
+                  <div class="items__mobile">
+                    <a href="/course"><i class="fas fa-book"></i>Khóa học</a>
+                  </div>
+                  <div class="items__mobile">
+                    <a href="http://facebook.com"><i class="fab fa-facebook"></i>Fanpage</a>
+                  </div>
+                  </div>
+                  {{#if login}}
+                  <div class="items__mobile">
+                    <a href="/courses/feedback"><i class="fas fa-envelope"></i>Góp ý</a>
+                  </div>
+                  {{#if admin}}
+                  <div class="items__mobile">
+                    <a href="/admin"><i class="fas fa-user-cog"></i>Quản lí</a>
+                  </div>
+                  {{/if}}
+                  <div class="items__mobile">
+                    <a href="/profile"><i class="fas fa-cog"></i>Cài đặt</a>
+                  </div>
+                  <div class="items__mobile">
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i>Đăng xuất</a>
+                  </div>
+                  {{else}}
+                  <div class="items__mobile">
+                    <a href="/signup"><i class="fas fa-user-plus"></i>Đăng ký</a>
+                  </div>
+                  <div class="items__mobile">
+                    <a href="/login"><i class="fas fa-sign-in-alt"></i>Đăng nhập</a>
+                  </div>
+                  {{/if}}
+              </div>
+          </div>
+        </div>
+    </div>
