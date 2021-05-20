@@ -90,8 +90,6 @@ class CommentController {
         try {
             let {idComment} = req.params;
             let {rate} = req.body
-            console.log(rate);
-
             if(parseInt(rate) === 1){
                 let body = {
                     rate: rate,
@@ -121,7 +119,6 @@ class CommentController {
                 status: 200
             })
         } catch (error) {
-            console.log(error)
             return res.json({
                 status:400,
                 message: "Đánh giá không thành công",

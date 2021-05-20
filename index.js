@@ -226,7 +226,7 @@ app.engine('handlebars', exphbs({
             }
             function deleteComment(idUserNow, comment, position){
                 let idUserInComment = comment.idUser._id;
-                if(idUserNow === idUserInComment || position === "admin"){
+                if(String(idUserNow) === String(idUserInComment) || position === "admin"){
                     return `<span style="color: red !important; cursor: pointer" onclick="handleDeleteComment.call(this, '${comment._id}')"> Xóa </span>`
                 }else{
                     return ``

@@ -5,6 +5,7 @@ const User = require('./model/user');
 const Feed = require('./model/feedback');
 const ContactModel = require("./model/contact")
 const MessageModel = require("./model/message")
+let _ = require("lodash");
 class CourseController{
     show(req, res, next){
         Course.findOne({ _id: req.params.idCourse })
@@ -15,9 +16,10 @@ class CourseController{
               model: 'users'
             } 
          })
-         .populate("teacher", "_id user fullName")
+         .populate("teacher", "_id user fullName avatar")
          .exec()
         .then(course =>{
+            course.commentId = _.orderBy(course.commentId, ['createdAt'],['desc']);
             const title = 'Khóa học '+course.slug;
             if(course){
                 User.findOne({_id: req.signedCookies.userId})

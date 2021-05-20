@@ -18,7 +18,6 @@ router.post("/login", function(req, res, next) {
     }
     if(check === check2){
         passport.authenticate('local', function(err, user, info) {
-            console.log(err);
             if (err) { 
                 return res.render('login',{err});
             }
