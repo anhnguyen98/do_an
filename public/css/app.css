@@ -45,8 +45,7 @@ body{
 }
 
 .main__add_video {
-    width: 100%;
-    min-height: 1300px;
+    width: 60%;
     margin: auto;
     margin-top: 5vh;
     padding: 10vh;
@@ -151,12 +150,6 @@ li{
 .btn-course-home:hover{
     color: #fff;
     background-color:  #da471f;
-}
-.btn-sm {
-    height: 22px !important;
-    text-align: center !important;
-    font-size: 10px;
-    font-weight: bold
 }
 
 .background-home{

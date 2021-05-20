@@ -3,6 +3,8 @@ const coursesRouter = require('./courses');
 const profileRouter = require('./profile')
 const adminRouter = require('./admin');
 const authMiddlewares = require('../middlewares/authmiddlewares');
+const commentRouter = require('./comment')
+const replyCommentRouter = require('./replyComment')
 
 
 function route(app){
@@ -34,6 +36,8 @@ function route(app){
         authMiddlewares.requireUser,
         authMiddlewares.requireUserlogin,
     siteRouter);
+    app.use('/comment', commentRouter);
+    app.use('/reply-comment', replyCommentRouter);
 }
 
 module.exports = route;

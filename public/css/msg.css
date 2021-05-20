@@ -136,18 +136,8 @@
     background-color: #ffffff;
     border: 1px solid #cccccc;
     overflow: auto;
-    scroll-behavior: smooth;
-    overflow-anchor:none;
 }
 
-.body-screen-msg::-webkit-scrollbar {
-    width: 5px;
-}
-
-.body-screen-msg::-webkit-scrollbar-thumb {
-    background: rgb(255, 102, 0); 
-    border-radius: 2rem;
-}
 
 .user-chat {
     border-radius: 1rem;

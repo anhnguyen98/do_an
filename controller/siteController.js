@@ -3,6 +3,9 @@ const { mongooseToObject } = require('../ulti/mongoose');
 const Course = require('./model/course');
 const User = require('./model/user');
 const md5 = require('md5');
+const ContactModel = require("../controller/model/contact")
+const MessageModel = require("../controller/model/message");
+const contact = require('../controller/model/contact');
 class SiteController{
 
     index(req, res){
@@ -175,7 +178,100 @@ class SiteController{
                 res.render('profile', {profile: mongooseToObject(profile),title}); 
             })
             .catch(next);
-        }     
+    }     
+    async message(req, res, next){
+        try {
+            let infoUser = await User.findOne({_id: req.signedCookies.userId})
+            delete infoUser.passWord
+            let listContact = await ContactModel.find({
+                $or: [{
+                    userId: req.signedCookies.userId
+                },{
+                    contactId: req.signedCookies.userId
+                }]
+            })
+            .populate("userId", "_id fullName user avatar")
+            .populate("contactId",  "_id fullName user avatar")
+            .sort({"createdAt": 1})
+            .lean()
+            .exec();
+
+            let getAllConversations = listContact.map((contactItem) => {
+                let getUserContact = {};
+                if(String(contactItem.userId._id) === String(req.signedCookies.userId)){
+                    getUserContact = Object.assign(getUserContact, contactItem.contactId)
+                    getUserContact.createdAt = contactItem.createdAt;
+                    return getUserContact
+                }else{
+                    getUserContact = Object.assign(getUserContact, contactItem.userId)
+                    getUserContact.createdAt = contactItem.createdAt;
+                    return getUserContact
+                }
+            })
+            let allConversationsWithMessagePromise = getAllConversations.map(async (converstationItem) => {
+                let listMessage = await MessageModel.find({
+                    $or: [{
+                    $and: [{
+                        "senderId" : converstationItem._id,
+                        "receiverId":  req.signedCookies.userId
+                    }] 
+                    },{
+                        $and: [{
+                            "receiverId" : converstationItem._id,
+                            "senderId": req.signedCookies.userId
+                        }] 
+                    }] 
+                })
+                .sort({"createdAt": 1})
+                .lean()
+                .exec();
+                converstationItem.messages = listMessage
+                return converstationItem
+            })
+            let allConversationsWithMessage = await Promise.all(allConversationsWithMessagePromise)
+            if(req.query.thread){
+                let listMessage = await MessageModel.find({
+                    $or: [{
+                    $and: [{
+                        "senderId" : req.query.thread,
+                        "receiverId":  req.signedCookies.userId
+                    }] 
+                    },{
+                        $and: [{
+                            "receiverId" : req.query.thread,
+                            "senderId": req.signedCookies.userId
+                        }] 
+                    }] 
+                })
+                .sort({"createdAt": 1})
+                .lean()
+                .exec();
+                let infoUserReceiver = await User.findOne({_id: req.query.thread})
+                delete infoUserReceiver.passWord
+                return res.render("message",{
+                    getAllMessage: listMessage,
+                    user: infoUser,
+                    statusMessage: true,
+                    allConversationsWithMessage,
+                    infoUserReceiver
+                })
+            }
+            
+            return res.render("message",{
+                allConversationsWithMessage,
+                getAllConversations,
+                user: infoUser,
+                statusMessage: false
+            })
+        } catch (error) {
+            return res.render("message",{
+                allConversationsWithMessage,
+                getAllConversations,
+                user: infoUser,
+                statusMessage: false
+            })
+        }
+    }
 }
 
 module.exports = new SiteController();

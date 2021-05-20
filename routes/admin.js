@@ -16,21 +16,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('img')
 
 router.get('/pinread', adminController.pinread);
-router.post('/:id/addindexvideo', adminController.postindexlesson);
-router.post('/:id/editindexvideo', adminController.editindexlesson);
-router.post('/:id/deleteindexvideo', adminController.deleteindexlesson);
 router.post('/:id/deleteletter', adminController.delletter);
 router.get('/:name/read', adminController.read);
 router.get('/thongbao', adminController.thongbao);
 router.get('/insert', adminController.insert);
 router.post('/insert', upload, adminController.insertup);
-router.get('/:id/delete/:idVideo', adminController.deletevideo);
-router.post('/:id/edit/:idVideo', adminController.postvideoiseditting);
-router.get('/:id/edit/:idVideo', adminController.editvideo);
+router.get('/:id/delete', adminController.deletevideo);
 router.get('/:id/addvideo', adminController.addvideo);
 router.post('/:id/addvideo', adminController.postvideo);
 router.get('/:id/edit', adminController.edit);
-router.post('/:id/edit',upload, adminController.update);
+router.post('/:id/edit', adminController.update);
 router.post('/:id/delete', adminController.delete);
 router.post('/:id/deleteuser', adminController.deleteuser);
 router.get('/:name/chitiet', adminController.chitiet);

@@ -1,23 +1,18 @@
 
 <div class="msg-admin-main">
     <div id="msg-admin" class="msg-admin">
-        <h4 id="title-admin" class="title-admin">I'm HeHe!</h4>
+        <h4 id="title-admin" class="title-admin">Bạn cần hỗ trợ</h4>
     </div>
     <div id="screen-msg" class="screen-msg screen-msg-none">
         <div class="header-screen-msg">
-            <span class="text-light" id="tags-title"><b>Bot chat HeHe</b></span>
+            <span class="text-light" id="tags-title"><b>bạn đang chat với {{course.teacher.fullName}}</b></span>
             <span class="text-light" title="Đónng cửa sổ chat" id="close-msg-admin"><h1>&times;</h1></span>
         </div>
         <div id="body-screen-msg" class="body-screen-msg">
             {{#if login}}
-            <div class="admin-feed">
-                <img src="/img/bot.jpg" alt="HeHe">
-                <span></span>
-                Chào mừng <b>{{name}}</b> đã tới với <b class="text-danger">KMA</b>.
-                Tôi có thể giúp bạn tìm hiểu về:
-                Khóa học, học phí, các ngôn ngữ xây dựng nên <b class="text-danger">KMA</b>,...
-                <small id="time__now"></small>
-            </div>
+               {{#each listMessage as |messageItem|}}
+                    {{{message @root.user messageItem @index }}}
+                {{/each}}
             {{else}}
             <div class="admin-feed">
                 <img src="/img/bot.jpg" alt="HeHe">
@@ -52,8 +47,7 @@
         const botfeed = enterMsg.value.toLowerCase();
         const Hour = Daten.getHours();
         const firstMsg = document.querySelector('#time__now');
-        firstMsg.innerHTML = timenow;
-
+        {{!-- firstMsg.innerHTML = timenow; --}}
         const botChat = {
             renderview: function(value) {
                 if (mainadmin) {
@@ -66,10 +60,10 @@
                         `;
                         setTimeout(()=>{
                             newMsg2.innerHTML = `
-                            <img src="/img/bot.jpg" alt="HeHe">
-                            <span></span>
-                            ${value}
-                            <small>${timenow}</small>
+                                <img src="/img/bot.jpg" alt="HeHe">
+                                <span></span>
+                                ${value}
+                                <small>${timenow}</small>
                             `;
                         }, Steptime)
                     mainadmin.appendChild(newMsg2);
@@ -79,10 +73,13 @@
                 const _this = this;
                 enterMsg.addEventListener ("keyup", function(event) {
                     if (event.keyCode === 13) {
-                        countEnter++;
+                        let idSender = $(".chat[data-idse]").attr("data-idse");
+                        let idReceiverId = $(".chat[data-idre]").attr("data-idre");
+                        socket.emit("send-message", {text: enterMsg.value, idSender, idReceiverId})
+                        {{!-- countEnter++; --}}
                         event.preventDefault();
                         _this.addElement()
-                        _this.handleQA(removeVietnameseTones(enterMsg.value))
+                        {{!-- _this.handleQA(removeVietnameseTones(enterMsg.value)) --}}
                         enterMsg.value = ""; 
                         bodyMsg.scrollTo(0,10000000000000);
                         setTimeout(()=>{
@@ -98,12 +95,12 @@
                         newMsg.classList.add('user-chat');
                         newMsg.innerHTML = `
                         {{#if admin}}
-                        <img src="/img/admin.jpg" alt="User">
+                            <img src="/img/admin.jpg" alt="User">
                         {{else}}
-                        <img src="/img/userchat.png" alt="User">
+                            <img src="/img/userchat.png" alt="User">
                         {{/if}}
-                        <span></span>${enterMsg.value}
-                        <small>${timenow}</small>
+                            <span></span>${enterMsg.value}
+                            <small>${timenow}</small>
                         `;
                     main.appendChild(newMsg);
                 }
@@ -112,9 +109,9 @@
             handleQA: function (value) {
                 if (value.includes('hello')||value.includes('chao ban')||value.includes('chao')&&value.includes('xin')) {
                     {{#if login}}
-                    this.renderview('Xin chào {{name}}')
+                        this.renderview('Xin chào {{name}}')
                     {{else}}
-                    this.renderview('Xin chào tớ thấy bạn chưa đăng nhập, hãy <a class="text-primary" href="/login">Đăng nhập </a>để bắt đầu học tập nhé')
+                        this.renderview('Xin chào tớ thấy bạn chưa đăng nhập, hãy <a class="text-primary" href="/login">Đăng nhập </a>để bắt đầu học tập nhé')
                     {{/if}}
                 }
                 else if (value.includes('khoa hoc')) {
@@ -181,5 +178,11 @@
         str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
         return str;
     }
+    $(function() {
+        bodyMsg.scrollTo(0,10000000000000);
+        setTimeout(()=>{
+            bodyMsg.scrollTo(0,10000000000000);
+        }, Steptime)
+    });
 </script>
 

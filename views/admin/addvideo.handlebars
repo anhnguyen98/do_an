@@ -1,152 +1,33 @@
-<script>
-    $(document).ready(function () {
-        $("#addindexvideo").hide();
-        $("#btn-canceladdindexvideo").hide();
-        $("#editindexvideo").hide();
-        $("#deleteindexvideo").hide();
-        $(".indexLesson").ready(() => {
-            $("[id*='indexLesson']").hide();
-        });
-        $("#btn-addindexvideo").click(() => {
-            $("#btn-canceladdindexvideo").show();
-            $("#addindexvideo").show();
-            $("#btn-editindexvideo").hide();
-            $("#btn-deleteindexvideo").hide();
-
-        });
-        $("#btn-deleteindexvideo").click(()=>{
-            $("#deleteindexvideo").show();
-            $("#btn-canceladdindexvideo").show();
-            $("#btn-editindexvideo").hide();
-            $("#btn-addindexvideo").hide();
-        });
-        $("#btn-editindexvideo").click(() => {
-            $("#editindexvideo").show();
-            $("#btn-canceladdindexvideo").show();
-            $("#btn-addindexvideo").hide();
-            $("#btn-deleteindexvideo").hide();
-        });
-        $("#btn-canceladdindexvideo").click(() => {
-            $("#addindexvideo").hide();
-            $("#btn-editindexvideo").show();
-            $("#btn-addindexvideo").show();
-            $("#btn-canceladdindexvideo").hide();
-            $("#btn-deleteindexvideo").show();
-            $("#editindexvideo").hide();
-            $("#deleteindexvideo").hide();
-        })
-        $(".indexLesson").click((e) => {
-            var indexLesson = e.target.className.split(" ");
-            indexLesson = "#" + indexLesson[indexLesson.length - 1];
-            var elmStyle = $(indexLesson).css("display");
-            if (elmStyle == 'none') {
-                $(indexLesson).show();
-            }
-            else {
-                $(indexLesson).hide();
-            }
-        })
-    });
-</script>
 <div class="main__admin_action">
-    
-    <div class="container">
-        
-        <div class="main__add_video">
-            <div class="bg-light video__table_mobile" style="overflow:auto;height:500px">
-                {{#each indexLesson}}
-                <ul class="list-group mb-2 ml-3">
-
-                    <div class="row">
-                        <li class="list-group-item list-group-item-success col-12 indexLesson indexLesson-{{this.level}}"
-                            style="cursor: pointer;">
-                            <b>Phần {{this.level}}: {{this.name}}
-                                  </b>
-                                <span class="float-right">{{this.videos.length}} bài | {{{formatTime this.timeIndexLesson}}}</span>
-                        </li>
-                    </div>
-                    <div id="indexLesson-{{this.level}}">
-                        <div class="row">
-                            <div class="col">
-                            {{{handleItemOfVideos this.videos}}}
-                            </div>
-                        </div>
-                    </div>
-
-                </ul>
-                {{/each}}
-                <form action="addindexvideo" method="POST">
-                    <div class="row mb-2" id="addindexvideo">
-                        <input class="form-control col-3 ml-3 mr-2" id="levelIndexVideo" name="levelIndexVideo"
-                            type="text" placeholder="Nhập đề mục"></input>
-                        <input class="form-control col-5 mr-2" id="nameIndexVideo" name="nameIndexVideo" type="text"
-                            placeholder="Nhập tên của đề mục"></input>
-                        <button class="btn btn-info">Thêm</button>
-                    </div>
-                </form>
-                <form action="editindexvideo" method="POST">
-                    <div class="row mb-2" id="editindexvideo">
-                        <input class="form-control col-3 ml-3 mr-2" id="levelIndexVideo" name="levelIndexVideo"
-                            type="text" placeholder="Nhập đề mục"></input>
-                        <input class="form-control col-5 mr-2" id="newNameIndexVideo" name="newNameIndexVideo" type="text"
-                            placeholder="Nhập tên mới của đề mục"></input>
-                        <button class="btn btn-success">Chỉnh sửa</button>
-                    </div>
-                </form>
-                <form action="deleteindexvideo" method="POST">
-                    <div class="row mb-2" id="deleteindexvideo">
-                        <input class="form-control col-5 ml-3 mr-2" id="levelIndexVideo" name="levelIndexVideo"
-                            type="text" placeholder="Nhập đề mục muốn xóa"></input>
-                        
-                        <button class="btn btn-danger">Xóa</button>
-                    </div>
-                </form>
-                <div class="row">
-                    <div class="ml-3">
-                        <button class="btn btn-info mr-1" id="btn-addindexvideo">Thêm đề mục</button>
-                        <button class="btn btn-success mr-1" id="btn-editindexvideo">Sửa đề mục</button>
-                        <button class="btn btn-danger mr-1" id="btn-deleteindexvideo">Xóa đề mục</button>
-                        <button class="btn btn-danger" id="btn-canceladdindexvideo">Hủy</button>
-                    </div>
-
-                </div>
+<div class="container">
+    <div class="main__add_video">
+        <div class="bg-light video__table_mobile" style="overflow:auto;height:300px">
+        {{#each courses.idVideo}}
+            <div class="">
+                <p class="text-info">{{lookup ../courses.nameLesson @index}}</p>
+                <p class="border-bottom border-danger"><b>Idvideo: </b> {{this}}</p> 
             </div>
-            <div class="video__table_in_mobile" style="height:300px">
-                <form action="addvideo" method="POST">
-                    <div class="form-group">
-
-
-                    </div>
-                    <div class="form-group">
-                        <label for="nameLesson">Tên video</label>
-                        <input class="form-control" id="nameLesson" name="nameLesson" type="text"
-                            placeholder="Nhập tên của video">
-                    </div>
-                    <div class="form-group">
-                        <label for="urlVideo">ID video</label><br />
-                        <i class="bi bi-youtube"></i>
-                        <input class="form-control" id="idVideo" name="idVideo" type="text"
-                            placeholder="Nhập ID của video"></input>
-                    </div>
-                    <div class="form-group">
-                        <label for="indexVideo">Phần</label>
-                        <input class="form-control" id="indexVideo" name="indexVideo" type="text"
-                            placeholder="Nhập số thứ tự phần">
-                    </div>
-                    <div class="form-group">
-                        <label for="contentVideo">Tóm tắt nội dung</label>
-                        <textarea class="form-control" id="content" name="content"></textarea>
-                        <script>
-                            var editor = CKEDITOR.replace('content');
-                        </script>
-                    </div>
-                    <div class="form-group">
-                        <a class="btn btn-secondary mb-4 text-light" href="/admin" style="float: left;">Về trang quản
-                            lí</a>
-                        <button class="btn btn-primary float-right">Lưu bài học</button>
-                    </div>
-                </form>
-            </div>
+        {{/each}} 
         </div>
+        <div class="video__table_in_mobile" style="height:300px">
+            <div class="form-group">
+                    <a href="/admin">Về trang quản lí</a>
+                </div>
+            <form action="addvideo" method="POST">
+                <div class="form-group">
+                    <label for="nameLesson">Tên video</label>
+                    <input class="form-control" id="nameLesson" name="nameLesson" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="idVideo">Idvideo</label>
+                    <input class="form-control" id="idVideo" name="idVideo" type="text">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary">Thêm</button>
+                    <a class="btn btn-danger" href="delete" style="float: right;">Xóa video cuối</a>
+                </div>
+            </form>
+        </div>        
     </div>
+</div>
 </div>

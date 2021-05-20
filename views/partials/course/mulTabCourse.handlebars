@@ -1,0 +1,32 @@
+<div class="multiple-tab-course">
+   <div id="tab-course">
+      <div class="tab-title" data-tab="content">Nội dung khóa học</div>
+      <div class="tab-title tab-title__select" data-tab="comment">Bình luận</div>
+      <div class="tab-title" data-tab="rate">Đánh giá</div>
+   </div>
+   <div id="tab-course__content">
+      <div class="tab-content__item" data="content">
+            
+      </div>
+      <div class="tab-content__item tab-content__select" data="comment">
+         {{> course/comment}}
+      </div>
+      <div class="tab-content__item" data="rate">3</div>
+   </div>
+
+</div>
+<script> 
+   let listTabTitle = $(".tab-title");
+   let listTabContent = $(".tab-content__item");
+   for(let i = 0; i < listTabTitle.length; i++){
+
+      $(listTabTitle[i]).click(function(){
+         listTabTitle.removeClass("tab-title__select");
+         $(this).addClass("tab-title__select");
+         let dataTabNow = $(this).attr("data-tab");
+         listTabContent.removeClass("tab-content__select")
+         $(`.tab-content__item[data=${dataTabNow}]`).addClass("tab-content__select")
+      })
+   }
+   
+</script>
