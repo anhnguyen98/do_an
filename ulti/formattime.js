@@ -1,3 +1,8 @@
+
+
+
+const moment = require('moment');
+
 module.exports = {
     formatTime: (d) => {
         d = Number(d);
@@ -14,5 +19,8 @@ module.exports = {
         if (s <= 9) st += '0' + s;
         else st += s;
         return st;
+    },
+    formatTimeComment : (time) => {
+        return moment(time).locale("vi").startOf("seconds").fromNow()
     }
 };

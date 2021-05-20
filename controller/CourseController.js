@@ -4,44 +4,83 @@ const Lesson = require('./model/lesson');
 const User = require('./model/user');
 const Feed = require('./model/feedback');
 const getVideoId = require('get-video-id');
+const ContactModel = require("./model/contact")
+const MessageModel = require("./model/message")
+let _ = require("lodash");
 class CourseController {
     show(req, res, next) {
-        const title = 'Khóa học ' + req.params.slug;
-        Course.findOne({ slug: req.params.slug })
+        Course.findOne({ _id: req.params.idCourse })
+            .populate({
+                path: 'commentId',
+                populate: {
+                    path: 'idUser',
+                    model: 'users'
+                }
+            })
+            .populate("teacher", "_id user fullName avatar")
+            .exec()
             .then(async (course) => {
+                course.commentId = _.orderBy(course.commentId, ['createdAt'],['desc']);
+                const title = 'Khóa học '+course.slug;
                 if (course) {
                     User.findOne({ _id: req.signedCookies.userId })
-                        .then(data => {
-                            if (data.learning.includes(req.params.slug) == false) {
-                                User.updateOne({ _id: req.signedCookies.userId }, { $push: { learning: req.params.slug } })
-                                    .then()
-                                Course.updateOne({ slug: req.params.slug }, { numberStudents: course.numberStudents + 1 })
-                                    .then()
+                        .then(async data => {
+                            if (data.learning.includes(req.params.idCourse) == false){
+                                User.update({_id: req.signedCookies.userId}, {$push:{learning: req.params.idCourse}})
+                                .then()
+                                Course.updateOne({idCourse: req.params.idCourse}, {numberStudents: course.numberStudents+1})
+                                .then() 
+                                ContactModel.create({
+                                    userId: course.teacher._id,
+                                    contactId: data._id
+                                }).then() 
+                                MessageModel.create({
+                                    senderId: course.teacher._id,
+                                    receiverId: req.signedCookies.userId,
+                                })
                             }
+                            var indexLesson = course.indexLesson;
+                            var arrTmp = [];
+                            var timeCourse = 0;
+                            for (var i = 0; i < indexLesson.length; i++) {
+                                var tmpIndex = indexLesson[i];
+                                var videos = await Lesson.find({ idIndexLesson: tmpIndex.id });
+                                var timeIndexLesson = 0;
+                                for (var j = 0; j < videos.length; j++) {
+                                    timeIndexLesson += parseInt(videos[j].timeLesson);
+                                    timeCourse += parseInt(videos[j].timeLesson);
+                                }
+                                tmpIndex["videos"] = videos;
+                                tmpIndex["timeIndexLesson"] = timeIndexLesson;
+                                arrTmp.push(tmpIndex);
+                            }
+                            let listMessage = await MessageModel.find({
+                                $or: [{
+                                   $and: [{
+                                       "senderId" : course.teacher._id,
+                                       "receiverId":  req.signedCookies.userId
+                                   }] 
+                                },{
+                                    $and: [{
+                                        "receiverId" : course.teacher._id,
+                                        "senderId": req.signedCookies.userId
+                                    }] 
+                                 }] 
+                            }).sort({"createdAt": 1}).limit(10).exec();
+                            res.cookie('khoahoc', course.idCourse);
+                            res.render('show', {
+                                timeCourse,
+                                indexLesson: arrTmp,
+                                course: mongooseToObject(course),
+                                title,
+                                user: {_id: data._id, position: data.position}, 
+                                position: data.position, 
+                                listMessage,
+                                countMessage: 0
+                            })
                         });
 
-                    var indexLesson = course.indexLesson;
-                    var arrTmp = [];
-                    var timeCourse = 0;
-                    for (var i = 0; i < indexLesson.length; i++) {
-                        var tmpIndex = indexLesson[i];
-                        var videos = await Lesson.find({ idIndexLesson: tmpIndex.id });
-                        var timeIndexLesson = 0;
-                        for (var j = 0; j < videos.length; j++) {
-                            timeIndexLesson += parseInt(videos[j].timeLesson);
-                            timeCourse += parseInt(videos[j].timeLesson);
-                        }
-                        tmpIndex["videos"] = videos;
-                        tmpIndex["timeIndexLesson"] = timeIndexLesson;
-                        arrTmp.push(tmpIndex);
-                    }
-                    res.cookie('khoahoc', course.slug);
-                    res.render('show', {
-                        timeCourse,
-                        indexLesson: arrTmp,
-                        course: mongooseToObject(course),
-                        title
-                    })
+  
                 } else {
                     res.redirect('/');
                 }
@@ -52,7 +91,7 @@ class CourseController {
     async seemorecourse(req, res, next) {
         console.log(req.signedCookies);
         var user = await User.findOne({ _id: req.signedCookies.userId });
-        
+
         var course = await Course.findOne({ slug: req.params.slug })
         const title = 'Khóa học ' + course.nameCourse;
 
@@ -73,8 +112,8 @@ class CourseController {
         }
         var learned = 'Đăng kí';
         var cssLearned = 'btn__go_course_locked';
-        for (var i = 0; i < user.learning.length;i++){
-            if (JSON.stringify(user.learning[i]) === JSON.stringify(course.slug)){
+        for (var i = 0; i < user.learning.length; i++) {
+            if (JSON.stringify(user.learning[i]) === JSON.stringify(course.slug)) {
                 learned = 'Học tiếp';
                 cssLearned = 'btn__go_course_unlocked';
                 break;

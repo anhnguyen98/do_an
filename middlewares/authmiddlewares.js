@@ -1,22 +1,25 @@
 
 const { find } = require('../controller/model/user');
 const User = require('../controller/model/user');
-module.exports.requireAuth = function(req, res, next){
+module.exports.requireAuth =async function(req, res, next){
     if(!req.signedCookies.userId){
         res.redirect('/login');
         return;
     }
     else {
-        User.find({ _id: req.signedCookies.userId })
-        .then(user =>{
+        try {
+            var user = await User.findOne({ _id: req.signedCookies.userId })
             if(!user){
                 res.redirect('/');
                 return;
-                }
-            }); 
+            } 
+            req.user = user
+            next();
+        } catch (error) {
+            return next(error)
+        }
     }
-    
-    next();
+
 };
 
 module.exports.requireAdmin = function(req, res, next){
@@ -31,7 +34,7 @@ module.exports.requireAdmin = function(req, res, next){
 };
 
 module.exports.requireLogin = function(req, res, next){
-    if(req.signedCookies.userId){
+    if(!req.signedCookies.userId){
         res.redirect('/');
         return;
     }

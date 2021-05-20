@@ -17,6 +17,14 @@ const Course = new Schema({
         type: Array, default: []
     },
     numberStudents: { type: Number, default: 0},
+    commentId:[{
+        type: String,
+        ref: "comments"
+    }],
+    teacher: {
+        type: String,
+        ref: "users"
+    }
 },{
     timestamps:true,
 });

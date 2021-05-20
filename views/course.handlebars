@@ -24,7 +24,6 @@
         {{/each}}
     </div>
 </div>
-{{> botchat}}
 <script>
     var learning = '{{data.learning}}';
     var namecourse = document.querySelectorAll('#namecourse');
@@ -47,5 +46,5 @@
         e.onclick = function() {
             setConfig('indexVideo', 0);
         }
-    })
+    });
 </script>
