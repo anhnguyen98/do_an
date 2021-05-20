@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -8,7 +9,7 @@ const route = require('./routes');
 const db = require('./config/db');
 
 const app = express();
-app.use(cookieparser('back-end-web-2020-vnua'));
+app.use(cookieparser(process.env.SECRET_COOKIE));
 db.connect();
 app.use(express.static(path.join(__dirname, 'public')));
 
