@@ -2,7 +2,6 @@
 
 
 const moment = require('moment');
-
 module.exports = {
     formatTime: (d) => {
         d = Number(d);

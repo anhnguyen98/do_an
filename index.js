@@ -602,4 +602,4 @@ app.use(passport.session())
 route(app);
 initSocket(io)
 const port = process.env.PORT || 8800;
-app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+server.listen(port, () => console.log(`App listening at http://localhost:${port}`));
