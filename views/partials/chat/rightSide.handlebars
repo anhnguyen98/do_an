@@ -1,6 +1,7 @@
 <div class="col-sm-9 sidenav no-padding">
     <div class="right" data-chat="">
         {{{viewMessage user getAllMessage statusMessage infoUserReceiver}}}
+        {{#if showInputText}}
         <div class="write" data-chat="">
             <input type="text" class="write-chat" id="input-chat" placeholder="Nhập nội dung...">
             <div class="icons">
@@ -12,90 +13,111 @@
                 <input type="hidden" id="peer-id" value="">
             </div>
         </div>
+        {{/if}}
+
     </div>
 </div>
 
 <script>
     let enterMsg = document.querySelector('#input-chat');
     let bodyMsg = document.querySelector("#chat-element")
-     const botChat = {
-        question: function() {
+    const botChat = {
+        question: function () {
             const _this = this;
-            enterMsg.addEventListener ("keyup", function(event) {
+            enterMsg.addEventListener("keyup", function (event) {
                 if (event.keyCode === 13) {
                     let idReceiver = $(".top[data-id]").attr("data-id");
-                    socket.emit("send-message", {text: enterMsg.value, idReceiver})
+                    socket.emit("send-message", { text: enterMsg.value, idReceiver })
                     event.preventDefault();
                     _this.addElement()
 
-                    enterMsg.value = ""; 
-                     bodyMsg.scrollTo(0,10000000000000);
-                        setTimeout(()=>{
-                            bodyMsg.scrollTo(0,10000000000000);
-                        }, 1000)
+                    enterMsg.value = "";
+                    bodyMsg.scrollTo(0, 10000000000000);
+                    setTimeout(() => {
+                        bodyMsg.scrollTo(0, 10000000000000);
+                    }, 1000)
                 }
             })
         },
         addElement: function () {
-                const main = document.querySelector('#chat-element');
-                if (main) {
-                    const newMsg = document.createElement('div');
-                        newMsg.classList.add('bubble');
-                        newMsg.classList.add('you');
-                        newMsg.innerHTML = `
-                            <span> ${enterMsg.value} </span>
+            const main = document.querySelector('#chat-element');
+            if (main) {
+                const newMsg = document.createElement('div');
+                newMsg.classList.add('bubble');
+                newMsg.classList.add('you');
+                newMsg.innerHTML = `
+                            <span> Bạn:  ${enterMsg.value} </span>
                     
                         `;
-                    main.appendChild(newMsg);
-                }
-            },
+                main.appendChild(newMsg);
+            }
+        },
         addElementMe: function (data) {
-                const main = document.querySelector('#chat-element');
-                if (main) {
-                    const newMsg = document.createElement('div');
-                        newMsg.classList.add('bubble');
-                        newMsg.classList.add('me');
-                        newMsg.innerHTML = `
+            const main = document.querySelector('#chat-element');
+            if (main) {
+                const newMsg = document.createElement('div');
+                newMsg.classList.add('bubble');
+                newMsg.classList.add('me');
+                newMsg.innerHTML = `
                             <span> ${data.text}</span>
                     
                         `;
-                    main.appendChild(newMsg);
-                }
-            },
+                main.appendChild(newMsg);
+            }
+        },
         start: function () {
             this.question()
         }
-     };
-      botChat.start();
-      $(document).ready(function(){
-            function nineScrollRight() {
-                $('.right .chat').niceScroll({
+    };
+    botChat.start();
+
+    function handleReadMessage(){
+        $(this).find("span").removeClass("noti-new-message")
+        $(this).removeClass("new-message")
+        $("#notifi-mess").html("")
+    }   
+    $(document).ready(function () {
+        function nineScrollRight() {
+            $('.right .chat').niceScroll({
                 smoothscroll: true,
                 horizrailenabled: false,
                 cursorcolor: '#ECECEC',
                 cursorwidth: '7px',
                 scrollspeed: 50
-                });
-                $('.right .chat').scrollTop($('.right .chat')[0].scrollHeight);
-            }
-            nineScrollRight();
-            socket.on("response-send-chat", function(data){
-                  const main = document.querySelector('#chat-element');
-                if (main) {
-                    const newMsg = document.createElement('div');
-                        newMsg.classList.add('bubble');
-                        newMsg.classList.add('me');
-                        newMsg.innerHTML = `
+            });
+            $('.right .chat').scrollTop($('.right .chat')[0].scrollHeight);
+        }
+        nineScrollRight();
+        socket.on("response-send-chat", function (data) {
+            const main = document.querySelector('#chat-element');
+            if (main) {
+                const newMsg = document.createElement('div');
+                newMsg.classList.add('bubble');
+                newMsg.classList.add('me');
+                newMsg.innerHTML = `
                             <span> ${data.text}</span>
-                    
                         `;
-                    main.appendChild(newMsg);
-                     bodyMsg.scrollTo(0,10000000000000);
-                        setTimeout(()=>{
-                            bodyMsg.scrollTo(0,10000000000000);
-                        }, 1000)
-                }
-            })
+                main.appendChild(newMsg);
+                bodyMsg.scrollTo(0, 10000000000000);
+                setTimeout(() => {
+                    bodyMsg.scrollTo(0, 10000000000000);
+                }, 1000)
+            }
+            {{!-- let person = 
+            message.innerHTML=`
+                   <a href=${url} class="room-chat">
+                                <li class="person new-message" data-chat=${allConversationsWithMessage[index]._id} onClick="handleReadMessage.call(this)">
+                                    <div class="left-avatar">
+                                        <div class="dot"></div>
+                                        <img src="${allConversationsWithMessage[index].avatar}" alt="">
+                                    </div>
+                                    <span class="name" style="display:block">${allConversationsWithMessage[index].fullName}</span>
+                                    <p class="preview">${previewNewMessage(allConversationsWithMessage[index].notification )} </p>
+                                    <span class="time">${formatTimeComment(allConversationsWithMessage[index].updatedAt)}</span>
+                                </li>
+                            </a>
+            ` --}}
+        })
 
-      });
+    });
 </script>

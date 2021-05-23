@@ -4,9 +4,12 @@ html {
 }
 
 body{
-    background-image: url(/img/backgr.jpg);
-    background-size: cover;
-    background-attachment:fixed
+    background-image: url("/img/backgr.jpg") !important;
+    background-size: cover !important; 
+    background-attachment:fixed !important;
+}
+*{
+    box-sizing: border-box;
 }
 
 .loader {

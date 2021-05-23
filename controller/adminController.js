@@ -63,6 +63,7 @@ class adminController {
             classify: classify,
             description: description,
             img: img,
+            teacher: req.user._id
         });
         newCourse.save();
         res.redirect('/admin');
@@ -242,7 +243,6 @@ class adminController {
         }
         var lessons = await Lesson.find({idIndexLesson});
         for (let i = 0; i < lessons.length; i++){
-            //console.log(lessons[i].idVideo);
             course.idVideo = removeElement(course.idVideo, lessons[i].idVideo);
         }
         for (let i = 0; i < course.indexLesson.length; i++) {

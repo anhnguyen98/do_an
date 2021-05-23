@@ -37,7 +37,6 @@
             var contentVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-contentvideo"].value;
             $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + idVideo + "?rel=0";
             $("#mainContentLesson")[0].innerHTML = contentVideo;
-            console.log(idVideo);
             $(".indexLesson").each((_, item) => {
                 var indexLesson = item.className.split(" ");
                 indexLesson = "#" + indexLesson[indexLesson.length - 1];

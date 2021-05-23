@@ -45,7 +45,10 @@ module.exports.requireUser = function(req, res, next){
     if(req.signedCookies.userId){
         User.findOne({_id: req.signedCookies.userId})
         .then(data=> {
-            res.locals.name = data.user;
+            if(data){
+                res.locals.name = data.user;
+                res.locals.avatar = data.avatar;
+            }
         })
     }
     next();

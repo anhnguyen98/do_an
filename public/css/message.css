@@ -1276,3 +1276,15 @@ label:focus,
   border-color: #576574
 }
 
+.new-message .preview{
+  color: black !important;
+  font-weight: bold !important;
+}
+.noti-new-message{
+  color: red !important;
+  text-align: right !important;
+  padding: 0 5px;
+  border: 1px solid red;
+  border-radius: 50%;
+  margin-right: 6px;
+}

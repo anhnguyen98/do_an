@@ -148,7 +148,6 @@ app.engine('handlebars', exphbs({
             return elm;
         },
         selectedSource: (nameSource) => {
-            //console.log(nameSource);
             if (nameSource === "Frontend")
                 return `<option value="Frontend" selected="selected">Frontend</option>
             <option value="Backend">Backend</option>
@@ -474,65 +473,44 @@ app.engine('handlebars', exphbs({
 
 
         },
-        message: (user, contentMessage, indexMessage) => {
-            if (parseInt(indexMessage) === 0) {
-                if (String(user._id) === String(contentMessage.senderId)) {
-
-                    return `
-                         <div class="chat user-chat" data-idse="${contentMessage.senderId}" data-idre="${contentMessage.receiverId}">
-                             <img src="/img/bot.jpg" alt="HeHe">
-                             <span>
-                             </span>
-                             ${contentMessage.text}
-                             <small id="time__now">${formatTimeComment(contentMessage.createdAt)}</small>
-                         </div>
-                     `
-                }
-
-                return `
-                     <div class="chat admin-feed" data-idse="${contentMessage.senderId}" data-idre="${contentMessage.receiverId}>
-                         <img src="/img/bot.jpg" alt="HeHe">
-                         <span></span>
-                         ${contentMessage.text}
-                         <small id="time__now">${formatTimeComment(contentMessage.createdAt)}</small>
-                     </div>
-                 `
-            }
-            if (String(user._id) === String(contentMessage.senderId)) {
-
-                return `
-                     <div class="chat user-chat">
-                         <img src="/img/bot.jpg" alt="HeHe">
-                         <span>
-                         </span>
-                         ${contentMessage.text}
-                         <small id="time__now">${formatTimeComment(contentMessage.createdAt)}</small>
-                     </div>
-                 `
-            }
-
-            return `
-                 <div class="chat admin-feed">
-                     <img src="/img/bot.jpg" alt="HeHe">
-                     <span></span>
-                     ${contentMessage.text}
-                     <small id="time__now">${formatTimeComment(contentMessage.createdAt)}</small>
-                 </div>
-             `
-        },
         contact: (allConversationsWithMessage) => {
-            if (allConversationsWithMessage.length) {
+            if (allConversationsWithMessage && allConversationsWithMessage.length) {
                 let previewMessage = (message) => {
-                    let content = message[message.length - 1].text
+                    let content = message[parseInt(message.length) - 1].text
                     if (content.length > 11) {
                         return message[message.length - 1].text.substr(0, 11) + "<span>...</span>"
                     }
                     return content;
 
                 }
+                let previewNewMessage = (notifi) => {
+                    let content = notifi[parseInt(notifi.length) - 1].content
+                    if (content.length > 11) {
+                        return `<span class="noti-new-message">  ${notifi.length}</span>`+notifi[notifi.length - 1].content.substr(0, 11) + "<span>...</span>" 
+                    }
+                    return `<span class="noti-new-message">  ${notifi.length}</span>`+ content;
+
+                }
+                let listContact = "";
                 for (let index = 0; index < allConversationsWithMessage.length; index++) {
                     let url = "/message?thread=" + allConversationsWithMessage[index]._id
-                    return `
+                    if(allConversationsWithMessage[index].notification && allConversationsWithMessage[index].notification.length){
+                        listContact += `
+                            <a href=${url} class="room-chat">
+                                <li class="person new-message" data-chat=${allConversationsWithMessage[index]._id} onClick="handleReadMessage.call(this)">
+                                    <div class="left-avatar">
+                                        <div class="dot"></div>
+                                        <img src="${allConversationsWithMessage[index].avatar}" alt="">
+                                    </div>
+                                    <span class="name" style="display:block">${allConversationsWithMessage[index].fullName}</span>
+                                    <p class="preview">${previewNewMessage(allConversationsWithMessage[index].notification )} </p>
+                                    <span class="time">${formatTimeComment(allConversationsWithMessage[index].updatedAt)}</span>
+                                </li>
+                            </a>
+                        `
+                        continue;
+                    }
+                    listContact += `
                      <a href=${url} class="room-chat">
                          <li class="person" data-chat="contact._id">
                              <div class="left-avatar">
@@ -541,12 +519,12 @@ app.engine('handlebars', exphbs({
                              </div>
                              <span class="name" style="display:block">${allConversationsWithMessage[index].fullName}</span>
                              <p class="preview">${previewMessage(allConversationsWithMessage[index].messages)} </p>
-                             <span class="time">${formatTimeComment(allConversationsWithMessage[index].createAt)}</span>
+                             <span class="time">${formatTimeComment(allConversationsWithMessage[index].updatedAt)}</span>
                          </li>
                      </a>
                  `
                 }
-                return ``;
+                return listContact
             } else {
                 return `<li class="person"> Bạn chưa có tin nhắn nào </li>`
             }

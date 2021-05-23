@@ -24,6 +24,10 @@ const Course = new Schema({
     teacher: {
         type: String,
         ref: "users"
+    }, 
+    createdAt: {
+        type: Number,
+        default: Date.now()
     }
 },{
     timestamps:true,

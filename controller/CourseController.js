@@ -6,6 +6,7 @@ const Feed = require('./model/feedback');
 const getVideoId = require('get-video-id');
 const ContactModel = require("./model/contact")
 const MessageModel = require("./model/message")
+const NotificationModel= require("./model/notification")
 let _ = require("lodash");
 class CourseController {
     show(req, res, next) {
@@ -20,24 +21,66 @@ class CourseController {
             .populate("teacher", "_id user fullName avatar")
             .exec()
             .then(async (course) => {
-                course.commentId = _.orderBy(course.commentId, ['createdAt'],['desc']);
-                const title = 'Khóa học '+course.slug;
+                course.commentId = _.orderBy(course.commentId, ['createdAt'], ['desc']);
+                const title = 'Khóa học ' + course.slug;
                 if (course) {
                     User.findOne({ _id: req.signedCookies.userId })
                         .then(async data => {
-                            if (data.learning.includes(req.params.idCourse) == false){
-                                User.update({_id: req.signedCookies.userId}, {$push:{learning: req.params.idCourse}})
-                                .then()
-                                Course.updateOne({idCourse: req.params.idCourse}, {numberStudents: course.numberStudents+1})
-                                .then() 
-                                ContactModel.create({
-                                    userId: course.teacher._id,
-                                    contactId: data._id
-                                }).then() 
-                                MessageModel.create({
-                                    senderId: course.teacher._id,
-                                    receiverId: req.signedCookies.userId,
+                            if (data.learning.includes(req.params.idCourse) == false) {
+                                User.update({ _id: req.signedCookies.userId }, { $push: { learning: req.params.idCourse } })
+                                    .then()
+                                Course.updateOne({ _id: req.params.idCourse }, { numberStudents: course.numberStudents + 1 })
+                                    .then()
+                                let listContact = await ContactModel.find({
+                                    $or: [{
+                                        userId: req.signedCookies.userId,
+                                        contactId: course.teacher._id
+                                    }, {
+                                        userId: course.teacher._id,
+                                        contactId: req.signedCookies.userId
+                                    }]
                                 })
+                                if (listContact.length) {
+                                    MessageModel.create({
+                                        senderId: course.teacher._id,
+                                        receiverId: req.signedCookies.userId,
+                                        text: course.teacher.fullName + " chúc mừng bạn đến với khóa học " + course.slug + " chúc bạn học tập hiệu quả"
+                                    }).then()
+                                    ContactModel.updateOne({
+                                        $or: [{
+                                            userId: req.signedCookies.userId,
+                                            contactId: course.teacher._id
+                                        }, {
+                                            userId: course.teacher._id,
+                                            contactId: req.signedCookies.userId
+                                        }]
+                                    },{
+                                        updatedAt: Date.now()
+                                    }).then()
+                                    NotificationModel.create({
+                                        sender: course.teacher._id,
+                                        receiver: req.signedCookies.userId,
+                                        content: course.teacher.fullName + " chúc mừng bạn đến với khóa học " + course.slug + " chúc bạn học tập hiệu quả"
+                                    }).then()
+                                } else {
+                                    if (String(course.teacher._id) !== String(data._id)) {
+                                        ContactModel.create({
+                                            userId: course.teacher._id,
+                                            contactId: data._id,
+                                            updatedAt: Date.now()
+                                        }).then()
+                                        MessageModel.create({
+                                            senderId: course.teacher._id,
+                                            receiverId: req.signedCookies.userId,
+                                            text: course.teacher.fullName + " chúc mừng bạn đến với khóa học " + course.slug + " chúc bạn học tập hiệu quả"
+                                        }).then()
+                                        NotificationModel.create({
+                                            sender: course.teacher._id,
+                                            receiver: req.signedCookies.userId,
+                                            content: course.teacher.fullName + " chúc mừng bạn đến với khóa học " + course.slug + " chúc bạn học tập hiệu quả"
+                                        }).then()
+                                    }
+                                }
                             }
                             var indexLesson = course.indexLesson;
                             var arrTmp = [];
@@ -56,31 +99,31 @@ class CourseController {
                             }
                             let listMessage = await MessageModel.find({
                                 $or: [{
-                                   $and: [{
-                                       "senderId" : course.teacher._id,
-                                       "receiverId":  req.signedCookies.userId
-                                   }] 
-                                },{
                                     $and: [{
-                                        "receiverId" : course.teacher._id,
+                                        "senderId": course.teacher._id,
+                                        "receiverId": req.signedCookies.userId
+                                    }]
+                                }, {
+                                    $and: [{
+                                        "receiverId": course.teacher._id,
                                         "senderId": req.signedCookies.userId
-                                    }] 
-                                 }] 
-                            }).sort({"createdAt": 1}).limit(10).exec();
+                                    }]
+                                }]
+                            }).sort({ "createdAt": 1 }).limit(10).exec();
                             res.cookie('khoahoc', course.idCourse);
                             res.render('show', {
                                 timeCourse,
                                 indexLesson: arrTmp,
                                 course: mongooseToObject(course),
                                 title,
-                                user: {_id: data._id, position: data.position}, 
-                                position: data.position, 
+                                user: { _id: data._id, position: data.position },
+                                position: data.position,
                                 listMessage,
-                                countMessage: 0
+                                countMessage: 0,
                             })
                         });
 
-  
+
                 } else {
                     res.redirect('/');
                 }
@@ -89,7 +132,6 @@ class CourseController {
         return;
     }
     async seemorecourse(req, res, next) {
-        console.log(req.signedCookies);
         var user = await User.findOne({ _id: req.signedCookies.userId });
 
         var course = await Course.findOne({ slug: req.params.slug })
@@ -113,7 +155,7 @@ class CourseController {
         var learned = 'Đăng kí';
         var cssLearned = 'btn__go_course_locked';
         for (var i = 0; i < user.learning.length; i++) {
-            if (JSON.stringify(user.learning[i]) === JSON.stringify(course.slug)) {
+            if (String(user.learning[i]) === String(course._id)) {
                 learned = 'Học tiếp';
                 cssLearned = 'btn__go_course_unlocked';
                 break;

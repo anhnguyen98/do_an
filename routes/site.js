@@ -54,6 +54,7 @@ router.get('/logout', siteController.logout);
 // router.post('/login', siteController.checklogin);
 router.post('/signup', siteController.checksignup);
 router.get('/course', siteController.course);
+router.get('/course-of-user', siteController.courseOfUser);
 router.get('/signup', siteController.signup);
 router.get('/login', siteController.login);
 router.get('/', siteController.index);

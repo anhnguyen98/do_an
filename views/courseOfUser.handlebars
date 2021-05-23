@@ -1,0 +1,50 @@
+{{> sidemenu}}
+<div class="main__show_courses">
+    <div class="__show__courses">
+        {{#each courses}}
+        <div class="__course">
+            <div class="img__course">
+                <img src="{{this.img}}" alt="">
+            </div>
+            <div class="info__course">
+                <div  class="name__course">
+                    <p>{{this.nameCourse}}</p>
+                </div>
+                <div class="content__course">
+                    {{this.description}}
+                </div>
+                <div class="go_to__course">
+                    <span class="num__member"><i class="fas fa-users"></i> {{this.numberStudents}}</span>
+                    <div class="learn btn__go_course_locked">
+                        <a class="btnJoin" href="/courses/seemore/{{this.slug}}">Tiếp tục</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+<script>
+    var learning = '{{data.learning}}';
+    var namecourse = document.querySelectorAll('#namecourse');
+    var learned = document.querySelectorAll('.learn a');
+    for ( var i = 0; i < learned.length; i++ ){
+        if (learning.includes(namecourse[i].innerHTML)){
+            learned[i].innerHTML = 'Học tiếp';
+            learned[i].classList.add('btn-learning');
+        }
+    }
+
+    const btnJoin = document.querySelectorAll('.btnJoin');
+    const STORAGE_INDEX_VIDEO = 'video';
+    const config = JSON.parse(localStorage.getItem(STORAGE_INDEX_VIDEO)) || {};
+    function setConfig(index, value) {
+            config[index] = value;
+            localStorage.setItem(STORAGE_INDEX_VIDEO, JSON.stringify(config));
+        }
+    btnJoin.forEach(e=> {
+        e.onclick = function() {
+            setConfig('indexVideo', 0);
+        }
+    });
+</script>
