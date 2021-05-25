@@ -19,12 +19,12 @@ const {formatTimeComment} = require("./ulti/formatTime");
 const app = express();
 const server = http.createServer(app)
 let io = socketio(server)
-
+let logger = require("morgan")
 
 app.use(cookieparser('back-end-web-2020-vnua'));
 db.connect();
 session.config(app);
-
+app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 //user cookie parser
 app.use(cookieParser())
