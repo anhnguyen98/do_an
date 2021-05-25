@@ -50,7 +50,6 @@ class CourseController {
         return;
     }
     async seemorecourse(req, res, next) {
-        console.log(req.signedCookies);
         var user = await User.findOne({ _id: req.signedCookies.userId });
         
         var course = await Course.findOne({ slug: req.params.slug })

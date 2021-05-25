@@ -1,6 +1,6 @@
 .header {
     height: 60px;
-    background-image: linear-gradient(to bottom right, #8E78FF, #FC7D7B);
+    background-color: rgb(255, 255, 255);
     box-shadow: 0 0 4px #000;
     z-index: 1000000;
 }
@@ -26,10 +26,12 @@
 .items__link {
     display: inline-block;
 }
-
+.items__link:hover {
+    background-color: thistle;
+}
 .items__link > a {
     text-decoration: none;
-    color: whitesmoke;
+    color: #000;
     display: inline-block;
     line-height: 60px;
     padding: 0 20px;
@@ -45,6 +47,7 @@
 
 .avatar {
     margin-right: 10px;
+    cursor: default;
 }
 
 .avatar > img {
@@ -85,6 +88,7 @@
     color: rgb(29, 29, 29);
     font-size: 25px;
     display: inline-block;
+    cursor: pointer;
 }
 
 .__auth_items:hover > .msg__bell_haeder {

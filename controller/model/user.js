@@ -6,7 +6,7 @@ const userSchame = new Schema({
     fullName: { type: String, required: true },
     email:{ type: String, required: true },
     passWord: { type: String, required: true },
-    learning: { type: Array},
+    learning: { type: Array, default: ''},
     position: {type: String, required: true, default: 'user'},
     date: {type:String, default: Date.now}
 }, {

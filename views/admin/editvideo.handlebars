@@ -5,12 +5,12 @@
                 <h3 class="text-center">{{title}}</h3>
             <form action="/admin/{{idCourse}}/edit/{{idVideo}}" method="POST">
                 <div class="form-group">
-                    <label for="nameLesson">Tên video</label>
+                    <label for="nameLesson">Tên bài học</label>
                     <input class="form-control" id="nameLesson" name="nameLesson" type="text" value="{{nameLesson}}"></input>
                 </div>
                 <div class="form-group">
-                    <label for="urlVideo">ID video</label><br/>
                     <i class="bi bi-youtube"></i>
+                    <label for="urlVideo">ID video</label><br/>
                     <input class="form-control" id="idVideo" name="idVideo" type="text" value="{{idVideo}}"></input>
                 </div>
                 <div class="form-group">
@@ -19,7 +19,7 @@
                             placeholder="Nhập số thứ tự phần" value="{{indexLesson}}">
                     </div>
                 <div class="form-group">
-                    <label for="contentVideo">Tóm tắt nội dung</label>
+                    <label for="contentVideo">Nội dung bài học</label>
                     <textarea class="form-control" id="content" name="content">{{content}}</textarea>
                     <script>
                         CKEDITOR.replace('content');

@@ -53,7 +53,9 @@
     <div class="container">
         
         <div class="main__add_video">
+            <h1 style="text-align: center; margin-bottom: 40px;">Quản lý bài học</h1>
             <div class="bg-light video__table_mobile" style="overflow:auto;height:500px">
+                <h3>Quản lý các đề mục</h3>
                 {{#each indexLesson}}
                 <ul class="list-group mb-2 ml-3">
 
@@ -112,6 +114,7 @@
                 </div>
             </div>
             <div class="video__table_in_mobile" style="height:300px">
+                <h3 style="text-align: center; margin-top: 40px;">Thêm bài học</h3>
                 <form action="addvideo" method="POST">
                     <div class="form-group">
 
@@ -123,8 +126,8 @@
                             placeholder="Nhập tên của video">
                     </div>
                     <div class="form-group">
+                                                <i class="bi bi-youtube"></i>
                         <label for="urlVideo">ID video</label>
-                        <i class="bi bi-youtube"></i>
                         <input class="form-control" id="idVideo" name="idVideo" type="text"
                             placeholder="Nhập ID của video"></input>
                     </div>
@@ -143,7 +146,7 @@
                     <div class="form-group">
                         <a class="btn btn-secondary mb-4 text-light" href="/admin" style="float: left;">Về trang quản
                             lí</a>
-                        <button class="btn btn-primary float-right">Lưu bài học</button>
+                        <button class="btn btn-primary float-right">Thêm bài học</button>
                     </div>
                 </form>
             </div>

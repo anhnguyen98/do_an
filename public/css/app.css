@@ -49,8 +49,9 @@ body{
     min-height: 1300px;
     margin: auto;
     margin-top: 5vh;
-    padding: 10vh;
+    padding: 5vh 10vh;
     background-color: #fff;
+    overflow: auto;
 }
 
 .video__table_mobile {
@@ -536,3 +537,4 @@ li{
     top: 0;
     left: 5px;
 }
+/* Css slideShow */

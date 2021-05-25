@@ -1,4 +1,3 @@
-require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -9,7 +8,7 @@ const route = require('./routes');
 const db = require('./config/db');
 
 const app = express();
-app.use(cookieparser(process.env.SECRET_COOKIE));
+app.use(cookieparser('back-end-web-2020-vnua'));
 db.connect();
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -102,9 +101,8 @@ app.engine('handlebars', exphbs({
                 if (s <= 9) st += '0' + s;
                 else st += s;
                 elm += `<li class="lesson-mask py-1 list-group-item list-group-item-light mt-2" data-idVideo="`
-                    + videos[i].idVideo + `" data-contentVideo="`
-                    + videos[i].content + `"`
-                    + `style="cursor: pointer;font-size: 14px">`
+                    + videos[i].idVideo 
+                    + `"style="cursor: pointer;font-size: 14px">`
                     + 'Bài ' + (i + 1) + ': '
                     + videos[i].nameLesson
                     + `<br/><span class=""><i class="fa fa-play mr-1"></i>`
@@ -113,8 +111,24 @@ app.engine('handlebars', exphbs({
             }
             return elm;
         },
+        handleShowLesson: (videos) => {
+            var elm = "";
+            for (var i = 0; i < videos.length; i++) {
+                elm += ` <div class="show-lesson" id="show-lesson-` + videos[i].idVideo + `">    
+                <div class="mt-4 content-layout">
+                    <div class="text-center">
+                        <h5>Nội dung bài học</h5>
+                    </div>
+                    <div id="mainContentLesson" style="padding: 20px;">
+                        ` + videos[i].content + `
+                    </div>
+                </div>
+            </div>`
+            }
+
+            return elm;
+        },
         selectedSource: (nameSource) => {
-            //console.log(nameSource);
             if (nameSource === "Frontend")
                 return `<option value="Frontend" selected="selected">Frontend</option>
             <option value="Backend">Backend</option>

@@ -10,11 +10,11 @@
                 }
             }
             localStorage.setItem("dataCurrentVideo", JSON.stringify(dataCurrentVideo));
-            $("#mainContentLesson")[0].innerHTML =
-                e.target.attributes["data-contentVideo"].value;
+            var idElmShowLesson = "#show-lesson-" + idVideo;
+            $(".show-lesson").hide();
+            $(idElmShowLesson).show();
             e.target.getElementsByClassName("fa")[0].className = "fa fa-pause mr-1";
-            $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" +
-                e.target.attributes["data-idVideo"].value + "?rel=0&autoplay=1";
+            $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + idVideo + "?rel=0&autoplay=1";
             e.preventDefault();
             e.target.style.border = "4px solid #66c9de";
             e.target.style.borderRadius = "5px";
@@ -29,15 +29,14 @@
         else return;
     });
     $(document).ready(function () {
+        $(".show-lesson").hide();
         $("[id*='indexLesson']").hide();
         if (localStorage.getItem("dataCurrentVideo") === null) {
             localStorage.setItem("dataCurrentVideo", JSON.stringify([]));
             var idVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-idVideo"].value;
-            var contentVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-contentvideo"].value;
-            var contentVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-contentvideo"].value;
-            $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + idVideo + "?rel=0";
-            $("#mainContentLesson")[0].innerHTML = contentVideo;
-            console.log(idVideo);
+            var idElmShowLesson = "#show-lesson-" + idVideo;
+            $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + idVideo + "?rel=0&autoplay=1";
+            $(idElmShowLesson).show();
             $(".indexLesson").each((_, item) => {
                 var indexLesson = item.className.split(" ");
                 indexLesson = "#" + indexLesson[indexLesson.length - 1];
@@ -63,6 +62,10 @@
                         $(indexLesson).find('li').each((_, video) => {
                             if (video.attributes["data-idVideo"].value === latestVideo) {
                                 $(indexLesson).show();
+                                var idElmShowLesson = "#show-lesson-" + latestVideo;
+                                $(".show-lesson").hide();
+                                $(idElmShowLesson).show();
+                                $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + latestVideo + "?rel=0&autoplay=1";
                                 video.style.border = "4px solid #66c9de";
                                 video.style.borderRadius = "5px";
                             };
@@ -72,10 +75,8 @@
             }
             if (kt === false) {
                 var idVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-idVideo"].value;
-                var contentVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-contentvideo"].value;
-                var contentVideo = $("#indexLesson-1")[0].firstElementChild.attributes["data-contentvideo"].value;
-                $("#iframe-yt")[0].src = "https://www.youtube.com/embed/" + idVideo + "?rel=0";
-                $("#mainContentLesson")[0].innerHTML = contentVideo;
+                var idElmShowLesson = "#show-lesson-" + idVideo;
+                $(idElmShowLesson).show();
                 dataCurrentVideo.push({
                     slug: slugCourse,
                     latestVideo: idVideo
@@ -107,10 +108,17 @@
         })
     });
 </script>
+<script type="text/javascript">
+$(document).ready(function(){
+$('*').bind('cut copy paste contextmenu', function (e) {
+    e.preventDefault();
+})});
+</script>
 <div class="row" id="data-course" data-slugCourse="{{course.slug}}">
     <div class="column side" style="">
+        <div class="title">Danh sách bài học</div>
         {{#each indexLesson}}
-        <ul class="list-group mb-2">
+        <ul class="list-group lesson-learn-mb mb-2 ">
 
             <li class="py-1 list-group-item list-group-item-success indexLesson indexLesson-{{this.level}}"
                 style="cursor: pointer;font-size: 14px; border-radius: 5px">
@@ -131,20 +139,19 @@
         </ul>
         {{/each}}
     </div>
-    <div class="bg-light column middle" id="screen-course" style="height:800px">
 
+
+    <div class="bg-light column middle">
+        <div>{{nameLesson}}</div>
         <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" id="iframe-yt" src="https://www.youtube.com/embed/?rel=0"
-                allowfullscreen></iframe>
+            <iframe class="embed-responsive-item" id="iframe-yt"
+                src="" allowfullscreen></iframe>
         </div>
-
-        <div class="text-center mt-4" style="height: 500px;">
-            <h5>Nội dung bài học</h5>
-            <div id="mainContentLesson">
-
-            </div>
-        </div>
+        {{#each indexLesson}}
+        {{{handleShowLesson this.videos}}}
+        {{/each}}
     </div>
+</div>
 
 </div>
 {{> botchat}}

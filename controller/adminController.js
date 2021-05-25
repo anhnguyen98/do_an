@@ -179,7 +179,7 @@ class adminController {
     }
     async editvideo(req, res, next) {
         var lesson = await Lesson.findOne({ idVideo: req.params.idVideo });
-        var title = 'Chỉnh sửa video';
+        var title = 'Chỉnh sửa bài học';
         var idCourse = req.params.id;
         var course = await Course.findOne({ _id: req.params.id });
         var indexLesson = -1;
@@ -242,7 +242,6 @@ class adminController {
         }
         var lessons = await Lesson.find({idIndexLesson});
         for (let i = 0; i < lessons.length; i++){
-            //console.log(lessons[i].idVideo);
             course.idVideo = removeElement(course.idVideo, lessons[i].idVideo);
         }
         for (let i = 0; i < course.indexLesson.length; i++) {
