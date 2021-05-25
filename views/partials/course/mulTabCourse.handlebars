@@ -1,8 +1,8 @@
-<div class="multiple-tab-course">
+<div class="multiple-tab-course"  style="text-align: left;">
    <div id="tab-course">
       <div class="tab-title" data-tab="content">Nội dung khóa học</div>
       <div class="tab-title tab-title__select" data-tab="comment">Bình luận</div>
-      <div class="tab-title" data-tab="rate">Đánh giá</div>
+      {{!-- <div class="tab-title" data-tab="rate">Đánh giá</div> --}}
    </div>
    <div id="tab-course__content">
       <div class="tab-content__item" data="content">
@@ -11,7 +11,9 @@
       <div class="tab-content__item tab-content__select" data="comment">
          {{> course/comment}}
       </div>
-      <div class="tab-content__item" data="rate">3</div>
+      {{!-- <div class="tab-content__item tab-content__select" data="rate">
+         {{> course/rateCourse}}
+      </div> --}}
    </div>
 
 </div>

@@ -17,6 +17,16 @@ class CourseController {
                     path: 'idUser',
                     model: 'users'
                 }
+            }).populate({
+                path: 'commentId',
+                populate: {
+                    path: 'replyComment',
+                    model: 'replyComments',
+                    populate:{
+                        path: 'idUser',
+                        model: 'users'
+                    }
+                }
             })
             .populate("teacher", "_id user fullName avatar")
             .exec()
@@ -111,7 +121,7 @@ class CourseController {
                                 }]
                             }).sort({ "createdAt": 1 }).limit(10).exec();
                             res.cookie('khoahoc', course.idCourse);
-                            res.render('show', {
+                            return res.render('show', {
                                 timeCourse,
                                 indexLesson: arrTmp,
                                 course: mongooseToObject(course),
@@ -125,7 +135,7 @@ class CourseController {
 
 
                 } else {
-                    res.redirect('/');
+                   return res.redirect('/');
                 }
             })
             .catch(next);
@@ -161,7 +171,7 @@ class CourseController {
                 break;
             }
         }
-        res.render('seemorecourse', {
+        return res.render('seemorecourse', {
             cssLearned,
             learned,
             timeCourse,

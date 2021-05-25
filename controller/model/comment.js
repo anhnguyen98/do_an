@@ -34,5 +34,14 @@ const CommentSchema = new Schema({
 }, {
    collection: 'comments'
 });
-
+CommentSchema.virtual('listReplyComment', {
+    ref: 'replyComments', // The model to use
+    localField: 'replyComment', // Find people where `localField`
+    foreignField: '_id', // is equal to `foreignField`
+    // If `justOne` is true, 'members' will be a single doc as opposed to
+    // an array. `justOne` is false by default.
+    justOne: false,
+  })
+  CommentSchema.set('toObject', { virtuals: true });
+CommentSchema.set('toJSON', { virtuals: true });
 module.exports = mongoose.model('comments', CommentSchema);

@@ -29,10 +29,14 @@
                 </div>
             </div>
             <div class="thong-bao mt-4" ><b><p id="msg">{{msg}}</p></b></div>
+             <div class="social-btn-group">
+                <a href="/auth/facebook" class="btn-login-social login-with-face fa fa-facebook">Facebook</a>
+                <a href="/auth/google" class="btn-login-social fa fa-google">Gmail</a>   
+            </div>     
             <div class="login">
                <button id="btn-login" class="btn btn-danger btn-sign-footer">Đăng nhập</button>
                <a href="/signup" class="btn btn-danger btn-sign-footer">Chưa có tài khoản</a>
-            </div>             
+            </div>          
         </form>
     </div>
     <div class="load" id="load">
@@ -41,6 +45,42 @@
             <h4>đang đăng nhập</h4>
         </div>
     </div>
+     <style>
+        .social-btn-group{
+            margin-top: 35px;
+            text-align: center;
+        }
+        .btn-login-social{
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+            text-decoration: none;
+            margin: 5px 2px;
+            background: #3B5998;
+            color: white;
+        }
+        .fa-facebook {
+        background: #3B5998;
+        color: white;
+        }
+
+        .fa-google {
+        background: #dd4b39;
+        color: white;
+        }
+
+        .btn-login-social:hover{
+            color: unset;
+            text-decoration: none;
+        }
+        .fa.fa-facebook:before {
+            content: "\f39e";
+            margin-right: 5px;
+        }
+        .fa.fa-google:before {
+            margin-right: 5px;
+        }
+    </style>
 <script>
     var btnInsertCourse = document.getElementById('btn-login');
     {{!-- var loginForm = document.forms['login-form'];

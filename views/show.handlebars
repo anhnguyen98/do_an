@@ -130,20 +130,17 @@
         </ul>
         {{/each}}
     </div>
-    <div class="bg-light column middle" id="screen-course" style="height:800px">
+    <div class="bg-light column middle" id="screen-course" style="height:auto">
 
         <div class="embed-responsive embed-responsive-16by9">
             <iframe class="embed-responsive-item" id="iframe-yt" src="https://www.youtube.com/embed/?rel=0"
                 allowfullscreen></iframe>
         </div>
 
-        <div class="text-center mt-4" style="height: 500px;">
-            <h5>Nội dung bài học</h5>
-            <div id="mainContentLesson">
-
-            </div>
+        <div class="text-center mt-4" style="height: auto;">
+             {{> course/mulTabCourse}}
         </div>
     </div>
 
 </div>
-{{> botchat}}
+{{!-- {{> botchat}} --}}

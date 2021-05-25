@@ -25,13 +25,13 @@ class SiteController {
                         Course.countDocuments({})
                             .then(async num => {
                                 if (!req.signedCookies.userId) {
-                                    res.render('course', {
+                                    return res.render('course', {
                                         courses: mutipleMongooseToObject(courses), title, num
                                     });
                                 }
                                 if (req.signedCookies.userId) {
                                     let listCourseOfUser = await Course.find({ _id: { $nin: req.user.learning } })
-                                    res.render('course', {
+                                    return res.render('course', {
                                         courses: mutipleMongooseToObject(listCourseOfUser), num, data: mongooseToObject(data), title, user: { postion: req.user.postion }
                                     });
                                 }
@@ -50,7 +50,7 @@ class SiteController {
                             .then(async num => {
                                 if (req.signedCookies.userId) {
                                     let listCourseOfUser = await Course.find({ _id: { $in: req.user.learning } })
-                                    res.render('course', {
+                                    return res.render('course', {
                                         courses: mutipleMongooseToObject(listCourseOfUser), num, data: mongooseToObject(data), title, user: { postion: req.user.postion }
                                     });
                                 }

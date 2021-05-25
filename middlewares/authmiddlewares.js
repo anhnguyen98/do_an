@@ -58,7 +58,11 @@ module.exports.requireAdminLogin = function(req, res, next){
     if(req.signedCookies.userId){
         User.findOne({_id: req.signedCookies.userId})
         .then(data=> {
-            if (data.position == 'admin') res.locals.admin = true;
+            if (data.position == 'admin'){
+                res.locals.admin = true;
+                res.locals.avatar = data.avatar;
+            } 
+            
         })
     }
     next();

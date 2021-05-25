@@ -250,10 +250,11 @@ app.engine('handlebars', exphbs({
         },
         displayComment: (commentItem, totalComment, indexCommentNow, userNow, idCourse) => {
             function viewReplyComment(replyComment, idComment) {
-                if (replyComment.length) {
-                    return `<div onclick='displayReplyComment.call(this, "${idComment}")' class="display-more-reply-comment"> Hiển thị thêm trả lời bình luận </div>`
-                }
-                return `<div onclick='displayReplyComment.call(this, "${idComment}")' class="display-more-reply-comment"></div>`
+                // if (replyComment.length) {
+                //     return `<div onclick='displayReplyComment.call(this, "${idComment}")' class="display-more-reply-comment"> Hiển thị thêm trả lời bình luận </div>`
+                // }
+                // return `<div onclick='displayReplyComment.call(this, "${idComment}")' class="display-more-reply-comment"></div>`
+                return ""
             }
             function handleTimeComment(createdAt, updatedAt) {
                 if (updatedAt > createdAt) {
@@ -317,6 +318,7 @@ app.engine('handlebars', exphbs({
             };
 
             function displayNoneComment(position, comment) {
+
                 if (position === "admin") {
                     if (comment.status === "active") {
                         return `<span style="color: blue !important; cursor: pointer; padding-right: 5px" status="none" onclick='displayNoneComment.call(this, "${comment._id}")'> Ẩn </span>`
@@ -335,11 +337,10 @@ app.engine('handlebars', exphbs({
                     return ``
                 }
             }
-
             let templateComment = `
                  <div class="comment">
                      <a class="avatar">
-                         <img src='https://o.vdoc.vn/data/image/2020/09/07/hinh-nen-cute-de-thuong-10.jpg'>
+                         <img src=${commentItem.idUser.avatar}>
                      </a>
                      <div class="content">
                          <a class="author">${commentItem.idUser.user}</a>
@@ -364,7 +365,7 @@ app.engine('handlebars', exphbs({
             let templateCommentBanned = `
                  <div class="comment banned">
                      <a class="avatar">
-                         <img src='https://o.vdoc.vn/data/image/2020/09/07/hinh-nen-cute-de-thuong-10.jpg'>
+                        <img src=${commentItem.idUser.avatar}>
                      </a>
                      <div class="content">
                          <a class="author" style="text-decoration: line-through;">${commentItem.idUser.user}</a>
@@ -372,7 +373,7 @@ app.engine('handlebars', exphbs({
                              ${handleTimeComment(commentItem.createdAt, commentItem.updatedAt)}
                          </div>
                          <div class="text">
-                             <p>Nội dung bị ẩn vì vi phạm do chứa nội dung bị cấm</p>
+                             <p>Nội dung bị ẩn do chứa nội dung bị cấm</p>
                          </div>
                          <div class="actions">
                              ${viewRateComment(userNow._id, commentItem, idCourse)}
@@ -396,7 +397,7 @@ app.engine('handlebars', exphbs({
             } else {
                 let templateCommentBanned = ` <div class="comment banned" style="display: none">
                      <a class="avatar">
-                         <img src='https://o.vdoc.vn/data/image/2020/09/07/hinh-nen-cute-de-thuong-10.jpg'>
+                     <img src=${commentItem.idUser.avatar}>
                      </a>
                      <div class="content">
                          <a class="author" style="text-decoration: line-through;">${commentItem.idUser.user}</a>
@@ -404,7 +405,7 @@ app.engine('handlebars', exphbs({
                              ${handleTimeComment(commentItem.createdAt, commentItem.updatedAt)}
                          </div>
                          <div class="text">
-                             <p>Nội dung bị ẩn vì vi phạm do chứa nội dung bị cấm</p>
+                             <p>Nội dung bị ẩn do chứa nội dung bị cấm</p>
                          </div>
                          <div class="actions">
                              ${viewRateComment(userNow._id, commentItem, idCourse)}
@@ -420,7 +421,7 @@ app.engine('handlebars', exphbs({
                 let templateCommentNone =
                     ` <div class="comment" style="display: none">
                      <a class="avatar">
-                         <img src='https://o.vdoc.vn/data/image/2020/09/07/hinh-nen-cute-de-thuong-10.jpg'>
+                     <img src=${commentItem.idUser.avatar}>
                      </a>
                      <div class="content">
                          <a class="author">${commentItem.idUser.user}</a>
@@ -565,7 +566,10 @@ app.engine('handlebars', exphbs({
                 }
                 return `<p> Bạn chưa có cuộc hội thoại nào</p>`
             }
-            return `<p> Chọn một chuỗi tin nhắn mà bạn muốn đọc nó</p>`
+            return `<p style="    text-align: center;
+            margin-top: 50px;
+            font-weight: bold;
+            font-size: 17px;"> Chọn một chuỗi tin nhắn mà bạn muốn đọc nó</p>`
         }
     }
 }));
@@ -579,5 +583,8 @@ app.use(passport.session())
 //init all socket
 route(app);
 initSocket(io)
+app.get("/*", function(req,res){
+    res.sendFile(path.join(__dirname, "./views/404NotFound.html"))
+})
 const port = process.env.PORT || 8800;
 server.listen(port, () => console.log(`App listening at http://localhost:${port}`));

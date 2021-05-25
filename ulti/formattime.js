@@ -1,5 +1,5 @@
 const moment = require('moment');
-let formatTime = (time) => {
+let formatTimeComment = (time) => {
     return moment(time).locale("vi").startOf("seconds").fromNow()
 }
-module.exports = formatTime
+module.exports = {formatTimeComment}
